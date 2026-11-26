@@ -79,49 +79,57 @@ if ("IntersectionObserver" in window) {
    Une carte est affichée seulement si les deux filtres correspondent. */
 const categoryFilters = document.querySelectorAll("[data-category-filter]");
 const languageFilters = document.querySelectorAll("[data-language-filter]");
-const projects = document.querySelectorAll(".project-card");
-const projectsEmpty = document.querySelector("#projects-empty");
+const projectSections = [
+  { grid: document.querySelector("#projects-grid"), empty: document.querySelector("#projects-empty") },
+  { grid: document.querySelector("#projects-big-grid"), empty: document.querySelector("#projects-big-empty") },
+];
 
 let activeCategory = "all";
 let activeLanguage = "all";
 
 function applyProjectFilters() {
-  let visibleCount = 0;
+  projectSections.forEach(({ grid, empty }) => {
+    if (!grid) return;
 
-  projects.forEach((card) => {
-    const categoryOk = activeCategory === "all" || card.dataset.category === activeCategory;
-    const languageOk = activeLanguage === "all" || card.dataset.language === activeLanguage;
-    const visible = categoryOk && languageOk;
+    let visibleCount = 0;
 
-    card.hidden = !visible;
+    grid.querySelectorAll(".project-card").forEach((card) => {
+      const categoryOk = activeCategory === "all" || card.dataset.category === activeCategory;
+      const languageOk = activeLanguage === "all" || card.dataset.language === activeLanguage;
+      const visible = categoryOk && languageOk;
 
-    if (visible) {
-      visibleCount += 1;
-      card.classList.remove("is-visible");
-      requestAnimationFrame(() => card.classList.add("is-visible"));
-    }
+      card.hidden = !visible;
+
+      if (visible) {
+        visibleCount += 1;
+        card.classList.remove("is-visible");
+        requestAnimationFrame(() => card.classList.add("is-visible"));
+      }
+    });
+
+    if (empty) empty.hidden = visibleCount > 0;
   });
-
-  if (projectsEmpty) projectsEmpty.hidden = visibleCount > 0;
 }
 
-function bindFilterGroup(buttons, onSelect) {
+function bindFilterGroup(buttons, key, onSelect) {
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
+      const value = button.dataset[key];
+
       buttons.forEach((item) => {
-        const active = item === button;
+        const active = item.dataset[key] === value;
         item.classList.toggle("is-active", active);
         item.setAttribute("aria-pressed", String(active));
       });
 
-      onSelect(button.dataset.categoryFilter ?? button.dataset.languageFilter);
+      onSelect(value);
       applyProjectFilters();
     });
   });
 }
 
-bindFilterGroup(categoryFilters, (value) => { activeCategory = value; });
-bindFilterGroup(languageFilters, (value) => { activeLanguage = value; });
+bindFilterGroup(categoryFilters, "categoryFilter", (value) => { activeCategory = value; });
+bindFilterGroup(languageFilters, "languageFilter", (value) => { activeLanguage = value; });
 applyProjectFilters();
 
 /* ---------- 5. Formulaire de contact ----------

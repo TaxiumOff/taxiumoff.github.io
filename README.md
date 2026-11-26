@@ -14,19 +14,28 @@ python -m http.server 8000
 
 Puis va sur `http://localhost:8000`.
 
+## Ajouter un projet
+
+```powershell
+python add_project.py
+```
+
+Le script pose les questions (type, nom, date, catégorie, langage, description, technologies, liens, style de vignette) et écrit directement la carte dans `index.html`, entre les marqueurs `BEGIN/END` de la bonne grille. Choisis `1` pour un **petit projet** ou `2` pour un **gros projet**, puis recharge la page.
+
 ## Structure
 
 ```text
-index.html      Contenu et sections
-css/style.css   Couleurs, mise en page, animations
-js/main.js      Thème, menu, filtres, formulaire
+index.html       Contenu et sections
+css/style.css    Couleurs, mise en page, animations
+js/main.js       Thème, menu, filtres, formulaire
+add_project.py   Assistant console pour ajouter des projets
 ```
 
 ## Ce qu’il faut personnaliser
 
 1. **Identité ✅** déjà renseignée pour Ilian Maanan : titre, initiales (`IM`), hero, « À propos » et pied de page.
-2. **Tes projets** : dans `#projects-grid`, duplique le modèle laissé en commentaire. Renseigne `data-category` (`jeux-video` ou `cybersecurite`) et `data-language` (`python` ou `cpp`), puis adapte le badge, le badge de langage (`lang-python` / `lang-cpp`) et le texte. Tant qu’il n’y a aucune carte, un message d’attente s’affiche.
-3. **Tes liens** : GitHub pointe déjà vers `taxiumoff`. Remplace les `href="#"` restants (X, LinkedIn) par tes profils.
+2. **Tes projets** : lance `python add_project.py`. Il remplit `#projects-grid` (petits projets) ou `#projects-big-grid` (gros projets) selon ton choix. Ne supprime pas les marqueurs `BEGIN/END`. Tant qu’une grille est vide, un message d’attente s’affiche.
+3. **Tes liens** : GitHub pointe déjà vers `TaxiumOff`. Remplace les `href="#"` restants (X, LinkedIn) par tes profils.
 4. **Ton e-mail ✅ à faire** : remplace `ton.email@example.com` dans `index.html` (lien `mailto:`) **et** dans `js/main.js` (`contactEmail`).
 5. **Tes couleurs** : modifie les variables `--accent`, `--accent-2`, `--bg`… en haut de `css/style.css`. Le thème clair se règle juste en dessous (`[data-theme="light"]`).
 
@@ -36,7 +45,8 @@ js/main.js      Thème, menu, filtres, formulaire
 - Design responsive (mobile, tablette, desktop)
 - Thème sombre / clair avec mémorisation du choix
 - Animations d’apparition au défilement, effets au survol, fond animé
-- Filtres imbriqués Catégorie → Langage avec « Tous » à chaque niveau et `aria-pressed`
+- Deux grilles : petits projets (vignettes compactes) et gros projets (grandes vignettes)
+- Filtres imbriqués Catégorie → Langage avec « Tous » à chaque niveau et `aria-pressed`, synchronisés entre les deux grilles
 - État vide automatique quand aucun projet n’est encore ajouté
 - Formulaire qui ouvre l’application e-mail avec le message pré-rempli (aucun backend)
 - Prise en charge de `prefers-reduced-motion` et navigation au clavier

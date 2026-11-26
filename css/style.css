@@ -442,6 +442,38 @@ ul { margin: 0; padding: 0; list-style: none; }
 .filter.is-active { border-color: transparent; background: var(--accent); color: var(--on-accent); }
 
 .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+/* Petits projets : vignettes compactes */
+.projects--small { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.projects--small .project-card__thumb { height: 110px; }
+.projects--small .project-card__body { gap: 0.5rem; padding: 1.1rem; }
+.projects--small .project-card__body h3 { font-size: 1.05rem; }
+.projects--small .project-card__body > p:not(.project-card__meta) { font-size: 0.85rem; }
+.projects--small .project-card__footer { padding: 0.8rem 1.1rem; }
+
+/* Gros projets : grandes vignettes */
+.projects--big { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+.projects--big .project-card__thumb { height: 300px; }
+.projects--big .project-card__body { gap: 0.9rem; padding: 1.7rem; }
+.projects--big .project-card__body h3 { font-size: 1.5rem; }
+.projects--big .project-card__badge { top: 1.2rem; left: 1.2rem; font-size: 0.8rem; }
+.projects--big .project-card__lang { top: 1.2rem; right: 1.2rem; font-size: 0.8rem; }
+.project-card__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  color: #fff;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 750;
+  text-align: center;
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
+}
+.project-card__soon { color: var(--muted); font-size: 0.8rem; }
+.filters--compact { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.empty-state code { padding: 0.1rem 0.4rem; border-radius: 5px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-2); }
 .project-card {
   display: flex;
   flex-direction: column;
@@ -499,6 +531,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .project-card__lang.lang-cpp { border-color: transparent; background: var(--accent); color: #fff; }
 .project-card__arrow {
   position: absolute;
+  z-index: 2;
   right: 1rem;
   bottom: 0.5rem;
   color: rgba(255,255,255,0.85);
@@ -625,6 +658,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 620px) {
   .projects { grid-template-columns: 1fr; }
+  .projects--big .project-card__thumb { height: 220px; }
   .stats { gap: 1.5rem; }
   .panel { padding: 1.5rem; }
   .floating-badge { left: 50%; right: auto; translate: -50% 0; white-space: nowrap; }
