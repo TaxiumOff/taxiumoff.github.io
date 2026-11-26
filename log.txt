@@ -1,0 +1,87 @@
+LOG DE CONTEXTE — Portfolio Ilian Maanan
+Mis à jour : 2026-11-26
+
+1. OÙ ON EST
+- Dépôt : C:\Users\ilian\Documents\Dev\Mon portfolio\taxiumoff.github.io
+- Remote : https://github.com/TaxiumOff/taxiumoff.github.io.git (branche main)
+- Historique récent :
+  - b48d4c1 Ajout des petits et gros projets + assistant Python
+  - 8523af2 Update
+  - a4b0b8f Model
+- L'utilisateur demande à l'agent de committer ; c'est lui qui fait `git push`.
+- Stack : HTML/CSS/JS natifs, zéro dépendance, zéro build. Python sert uniquement à l'outil d'ajout de projets.
+- Arbre de travail propre avant la création de ce log.
+
+2. FICHIERS
+- index.html : tout le contenu visible (sections, filtres, marqueurs de projets).
+- css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations et responsive.
+- js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, formulaire mailto, année du footer.
+- add_project.py : assistant console qui écrit directement dans index.html.
+- README.md : instructions d'usage et personnalisation.
+- .gitignore : __pycache__/, *.py[cod], .DS_Store, Thumbs.db.
+
+3. STRUCTURE DES SECTIONS
+- #accueil : hero, nom "Ilian", vignette de code décorative.
+- #apropos : bio + compétences, eyebrow 01.
+- #projets : onglet "Petits projets", eyebrow 02, grille #projects-grid, vignettes de 110 px.
+- #gros-projets : onglet "Gros projets", eyebrow 03, grille #projects-big-grid, vignettes de 300 px avec le nom du projet affiché dessus.
+- #contact : eyebrow 04.
+- Navigation : Accueil, À propos, Petits projets, Gros projets, Contact.
+- Le bouton du hero "Voir mes projets" pointe sur #projets.
+
+4. CATÉGORIES ET FILTRES
+- Catégories : jeux-video ("Jeux vidéo") et cybersecurite ("Cybersécurité").
+- Langages : python ("Python") et cpp ("C++").
+- Deux lignes de filtres dans CHAQUE section projets, avec "Tous" aux deux niveaux.
+- Boutons : data-category-filter / data-language-filter, état aria-pressed.
+- Les filtres des deux sections sont synchronisés par valeur (on compare dataset[key], pas l'identité du bouton).
+- Règle d'affichage : une carte est visible seulement si la catégorie ET le langage correspondent, ou si le filtre est "all".
+- Messages d'attente automatiques : #projects-empty et #projects-big-empty.
+
+5. CONVENTIONS DES CARTES
+- Petite carte : <article class="project-card project-card--small reveal" data-category="..." data-language="...">
+- Grosse carte : project-card--big + <span class="project-card__cover">Nom du projet</span> dans la vignette.
+- Styles de vignette : thumb--one (violet, jeux vidéo), thumb--two (vert, cybersécurité), thumb--three (orange, choix libre).
+- Badges : .project-card__badge = catégorie ; .project-card__lang avec .lang-python ou .lang-cpp = langage.
+- NE PAS SUPPRIMER CES MARQUEURS :
+    <!-- BEGIN SMALL PROJECTS --> ... <!-- END SMALL PROJECTS -->
+    <!-- BEGIN BIG PROJECTS --> ... <!-- END BIG PROJECTS -->
+- Les cartes sont insérées juste avant le marqueur END correspondant.
+
+6. AJOUTER UN PROJET
+- Commande : python add_project.py (depuis le dossier du dépôt).
+- Questions posées : type (1 = petit, 2 = gros), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
+- Le script échappe le HTML (html.escape) et écrit directement dans index.html. Recharger la page ensuite.
+- Testé sur une copie temporaire pour un petit et un gros projet : OK. Aucun projet réel n'a encore été ajouté.
+
+7. IDENTITÉ ET TEXTES DÉJÀ PERSONNALISÉS
+- Ilian Maanan, initiales IM, titre "Ilian Maanan — Portfolio".
+- Hero : "Bonjour, je suis Ilian." / "Développeur de jeux vidéo et passionné de cybersécurité."
+- À propos : classe de première générale, Python, algorithmique, développement de jeux vidéo, cybersécurité.
+- Vignette de code du hero :
+    let mood = "joyeux"; // comme d'hab ;)
+    let objectif = "progresser"; // un jour à la fois
+- GitHub : https://github.com/TaxiumOff (présent dans le hero et le contact).
+
+8. RESTE À FAIRE / POINTS D'ATTENTION
+- Aucun projet pour l'instant : les deux grilles affichent leur message d'attente.
+- Remplacer ton.email@example.com dans index.html (lien mailto) ET dans js/main.js (contactEmail).
+- Remplacer les href="#" restants (LinkedIn, X).
+- Ne pas inventer de projets : l'utilisateur n'en a pas encore.
+- L'utilisateur aime qu'on pose des questions avant les changements de structure ; il choisit souvent les options "(recommandé)".
+- Toujours répondre en français.
+- Avant toute modification, regarder `git status` et `git diff` : l'utilisateur peut avoir édité les fichiers entre deux sessions.
+
+9. COMMANDES UTILES
+- Lancer le site : python -m http.server 8000
+- Ajouter un projet : python add_project.py
+- Vérifier le JS : node --check js/main.js
+- Voir l'état : git status --short
+- Commiter : git add -A puis git commit -m "..."
+- Le push est fait par l'utilisateur, pas par l'agent.
+
+10. VÉRIFICATIONS DÉJÀ FAITES
+- Aucune erreur console au chargement de index.html dans le navigateur intégré.
+- Filtres testés (par exemple jeux-video + cpp) et synchronisés entre les deux grilles.
+- Insertions petit/gros projets testées sur une copie temporaire, avec échappement HTML correct.
+- Équilibrage des accolades CSS et syntaxe JS/Python vérifiés.
