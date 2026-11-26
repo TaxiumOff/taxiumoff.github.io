@@ -1,10 +1,257 @@
-<html>
-    <head>
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portfolio — présente tes projets, tes compétences et tes coordonnées.">
+  <title>Ton Prénom Nom — Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
 
-    </head>
-    <body>
-        <h1>Welcome to my portfolio !</h1>
+  <!-- Décoration de fond (purement visuelle) -->
+  <div class="backdrop" aria-hidden="true">
+    <span class="orb orb--one"></span>
+    <span class="orb orb--two"></span>
+    <span class="grid-overlay"></span>
+  </div>
 
-    </body>
+  <header class="site-header">
+    <div class="container header__inner">
+      <!-- À PERSONNALISER : nom + initiales -->
+      <a class="brand" href="#accueil" aria-label="Retour à l’accueil">
+        <span class="brand__mark">TN</span>
+        <span class="brand__name">Ton Prénom Nom</span>
+      </a>
 
+      <nav class="nav" id="navigation" aria-label="Navigation principale">
+        <a href="#accueil">Accueil</a>
+        <a href="#apropos">À propos</a>
+        <a href="#projets">Projets</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Activer le thème clair" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+        </button>
+        <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="accueil">
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <p class="eyebrow reveal"><span class="pulse-dot"></span> Disponible pour de nouveaux projets</p>
+          <!-- À PERSONNALISER -->
+          <h1 class="reveal" style="--delay: 80ms">Bonjour, je suis <span class="gradient-text">Ton Prénom</span>.</h1>
+          <p class="hero__lead reveal" style="--delay: 160ms">
+            Développeur web, créateur de choses utiles et curieux de tout. Voici une vitrine de ce que je construis — à compléter avec tes projets.
+          </p>
+          <div class="hero__actions reveal" style="--delay: 240ms">
+            <a class="btn btn--primary" href="#projets">
+              Voir mes projets
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="#contact">Me contacter</a>
+          </div>
+          <!-- À PERSONNALISER : remplacer # par tes profils -->
+          <ul class="socials reveal" style="--delay: 320ms" aria-label="Mes profils">
+            <li><a href="#" aria-label="GitHub">GitHub</a></li>
+            <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
+            <li><a href="#" aria-label="Twitter / X">X</a></li>
+          </ul>
+        </div>
+
+        <!-- Carte décorative : remplace-la par une capture ou une illustration si tu veux -->
+        <div class="hero__visual reveal" style="--delay: 200ms" aria-hidden="true">
+          <div class="code-card">
+            <div class="code-card__bar"><span></span><span></span><span></span><small>portfolio.js</small></div>
+            <div class="code-card__body">
+              <p><span class="c-purple">const</span> <span class="c-blue">projets</span> = [</p>
+              <p class="indent">&quot;À compléter&quot;, <span class="c-muted">// ton premier projet</span></p>
+              <p class="indent">&quot;À imaginer&quot;, <span class="c-muted">// celui qui te ressemble</span></p>
+              <p>];</p>
+              <p class="spacer">&nbsp;</p>
+              <p><span class="c-purple">export default</span> <span class="c-blue">moi</span>;</p>
+            </div>
+          </div>
+          <div class="floating-badge"><span class="pulse-dot"></span> En construction, comme toi</div>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#apropos" aria-label="Faire défiler vers la suite"><span></span></a>
+    </section>
+
+    <!-- ================= À PROPOS ================= -->
+    <section class="section" id="apropos">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">01 / À propos</p>
+          <h2>Un peu de contexte</h2>
+          <p class="section__intro">Qui es-tu, ce que tu aimes faire, et ce que tu cherches à apprendre.</p>
+        </header>
+
+        <div class="about__grid">
+          <article class="panel reveal" style="--delay: 80ms">
+            <h3>Qui suis-je&nbsp;?</h3>
+            <p>À compléter : quelques phrases sur ton parcours, ce qui te motive, ton approche d’un projet. Garde ça simple et humain.</p>
+            <ul class="stats">
+              <li><strong>3+</strong><span>années de pratique</span></li>
+              <li><strong>12</strong><span>projets réalisés</span></li>
+              <li><strong>∞</strong><span>idées en tête</span></li>
+            </ul>
+          </article>
+
+          <article class="panel reveal" style="--delay: 160ms">
+            <h3>Compétences</h3>
+            <p>À compléter : remplace ces puces par tes technologies et tes points forts.</p>
+            <ul class="tags">
+              <li>HTML</li><li>CSS</li><li>JavaScript</li><li>TypeScript</li>
+              <li>React</li><li>Node.js</li><li>Git</li><li>UX / UI</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROJETS ================= -->
+    <section class="section section--alt" id="projets">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">02 / Projets</p>
+          <h2>Ce que j’ai construit</h2>
+          <p class="section__intro">Une sélection de projets. Duplique une carte pour en ajouter d’autres.</p>
+        </header>
+
+        <div class="filters reveal" role="group" aria-label="Filtrer les projets">
+          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Tous</button>
+          <button class="filter" type="button" data-filter="web" aria-pressed="false">Web</button>
+          <button class="filter" type="button" data-filter="app" aria-pressed="false">Applications</button>
+          <button class="filter" type="button" data-filter="experiment" aria-pressed="false">Expériences</button>
+        </div>
+
+        <div class="projects" id="projects-grid">
+          <!-- À PERSONNALISER : carte de projet n°1 -->
+          <article class="project-card reveal" data-category="web" style="--delay: 0ms">
+            <div class="project-card__thumb thumb--one">
+              <span class="project-card__badge">Web</span>
+              <span class="project-card__arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="project-card__body">
+              <p class="project-card__meta">2026 · Projet personnel</p>
+              <h3>Nom du projet 01</h3>
+              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
+              <ul class="tags"><li>HTML</li><li>CSS</li><li>JS</li></ul>
+            </div>
+            <div class="project-card__footer">
+              <a href="#" aria-label="Voir le projet 01">Voir le projet <span aria-hidden="true">→</span></a>
+              <a href="#" aria-label="Code source du projet 01">Code source</a>
+            </div>
+          </article>
+
+          <!-- À PERSONNALISER : carte de projet n°2 -->
+          <article class="project-card reveal" data-category="app" style="--delay: 80ms">
+            <div class="project-card__thumb thumb--two">
+              <span class="project-card__badge">Application</span>
+              <span class="project-card__arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="project-card__body">
+              <p class="project-card__meta">2025 · Projet d’équipe</p>
+              <h3>Nom du projet 02</h3>
+              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
+              <ul class="tags"><li>React</li><li>API</li></ul>
+            </div>
+            <div class="project-card__footer">
+              <a href="#" aria-label="Voir le projet 02">Voir le projet <span aria-hidden="true">→</span></a>
+              <a href="#" aria-label="Code source du projet 02">Code source</a>
+            </div>
+          </article>
+
+          <!-- À PERSONNALISER : carte de projet n°3 -->
+          <article class="project-card reveal" data-category="experiment" style="--delay: 160ms">
+            <div class="project-card__thumb thumb--three">
+              <span class="project-card__badge">Expérience</span>
+              <span class="project-card__arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="project-card__body">
+              <p class="project-card__meta">2025 · Expérimentation</p>
+              <h3>Nom du projet 03</h3>
+              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
+              <ul class="tags"><li>Canvas</li><li>Animation</li></ul>
+            </div>
+            <div class="project-card__footer">
+              <a href="#" aria-label="Voir le projet 03">Voir le projet <span aria-hidden="true">→</span></a>
+              <a href="#" aria-label="Code source du projet 03">Code source</a>
+            </div>
+          </article>
+        </div>
+
+        <p class="hint reveal">Astuce : copie-colle une carte, change son contenu et son <code>data-category</code> pour la classer dans les filtres.</p>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="section" id="contact">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="eyebrow">03 / Contact</p>
+          <h2>Parlons de ton projet</h2>
+          <p class="section__intro">Une question, une idée, une collaboration&nbsp;? Écris-moi.</p>
+        </header>
+
+        <div class="contact__grid">
+          <div class="panel reveal">
+            <h3>Me joindre directement</h3>
+            <!-- À PERSONNALISER : adresse e-mail -->
+            <p>Le plus simple reste l’e-mail. Réponds-moi aussi sur tes réseaux préférés.</p>
+            <a class="btn btn--primary" href="mailto:ton.email@example.com">ton.email@example.com</a>
+            <ul class="socials socials--large">
+              <li><a href="#">GitHub</a></li>
+              <li><a href="#">LinkedIn</a></li>
+              <li><a href="#">X</a></li>
+            </ul>
+          </div>
+
+          <!-- Le formulaire ouvre l’application e-mail avec le message pré-rempli (pas besoin de serveur). -->
+          <form class="panel contact-form reveal" id="contact-form" style="--delay: 100ms">
+            <h3>Écris-moi un message</h3>
+            <div class="field">
+              <label for="name">Ton nom</label>
+              <input id="name" name="name" type="text" placeholder="Camille Dupont" required>
+            </div>
+            <div class="field">
+              <label for="email">Ton e-mail</label>
+              <input id="email" name="email" type="email" placeholder="camille@exemple.com" required>
+            </div>
+            <div class="field">
+              <label for="subject">Sujet</label>
+              <input id="subject" name="subject" type="text" placeholder="Une idée de projet">
+            </div>
+            <div class="field">
+              <label for="message">Ton message</label>
+              <textarea id="message" name="message" rows="4" placeholder="Bonjour, j’aimerais discuter de…" required></textarea>
+            </div>
+            <button class="btn btn--primary btn--full" type="submit">Préparer l’e-mail</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <p>© <span id="year">2026</span> Ton Prénom Nom — portfolio à compléter.</p>
+      <a href="#accueil">Retour en haut ↑</a>
+    </div>
+  </footer>
+</body>
 </html>
