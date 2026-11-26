@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Ajoute un projet (petit ou gros) au portfolio en écrivant dans index.html.
+"""Ajoute un projet (personnel ou majeur) au portfolio en écrivant dans index.html.
 
 Usage : python add_project.py
 Les cartes sont insérées entre les marqueurs BEGIN/END de chaque grille.
@@ -18,8 +18,8 @@ MARKERS = {
 }
 
 SIZES = {
-    "1": {"value": "petit", "label": "Petit projet", "section": "Petits projets"},
-    "2": {"value": "gros", "label": "Gros projet", "section": "Gros projets"},
+    "1": {"value": "petit", "label": "Projet personnel", "section": "Projets personnels"},
+    "2": {"value": "gros", "label": "Projet majeur", "section": "Projets majeurs"},
 }
 
 CATEGORIES = {
@@ -28,8 +28,18 @@ CATEGORIES = {
 }
 
 LANGUAGES = {
-    "1": {"value": "python", "label": "Python", "badge": "lang-python"},
-    "2": {"value": "cpp", "label": "C++", "badge": "lang-cpp"},
+    "1": {
+        "value": "python",
+        "label": "Python",
+        "badge": "lang-python",
+        "icon": "M11.858 0c-.978.005-1.913.088-2.736.234C6.7.662 6.26 1.558 6.26 3.21v2.182h5.725v.727H4.111c-1.664 0-3.121 1-3.577 2.903-.526 2.181-.549 3.542 0 5.82.407 1.694 1.379 2.902 3.043 2.902h1.969v-2.616c0-1.89 1.635-3.557 3.576-3.557h5.72c1.591 0 2.862-1.31 2.862-2.91v-5.45c0-1.553-1.309-2.718-2.863-2.977A18 18 0 0 0 11.858 0M8.762 1.755c.591 0 1.074.491 1.074 1.095 0 .601-.483 1.087-1.074 1.087A1.08 1.08 0 0 1 7.688 2.85c0-.604.48-1.095 1.074-1.095m9.656 4.364v2.543c0 1.971-1.671 3.63-3.577 3.63H9.122c-1.566 0-2.862 1.34-2.862 2.91v5.452c0 1.551 1.349 2.464 2.862 2.91 1.813.532 3.55.628 5.72 0 1.44-.418 2.862-1.258 2.862-2.91V18.47h-5.719v-.727h8.582c1.664 0 2.284-1.16 2.862-2.903.598-1.793.573-3.518 0-5.819-.41-1.656-1.196-2.903-2.862-2.903zm-3.216 13.807a1.08 1.08 0 0 1 1.074 1.088c0 .604-.48 1.094-1.074 1.094-.592 0-1.075-.49-1.075-1.094 0-.601.483-1.088 1.075-1.088",
+    },
+    "2": {
+        "value": "cpp",
+        "label": "C++",
+        "badge": "lang-cpp",
+        "icon": "M22.394 6c-.167-.29-.398-.543-.652-.69L12.926.22c-.509-.294-1.34-.294-1.848 0L2.26 5.31c-.508.293-.923 1.013-.923 1.6v10.18c0 .294.104.62.271.91.167.29.398.543.652.69l8.816 5.09c.508.293 1.34.293 1.848 0l8.816-5.09c.254-.147.485-.4.652-.69.167-.29.27-.616.27-.91V6.91c.003-.294-.1-.62-.268-.91zM12 19.11c-3.92 0-7.109-3.19-7.109-7.11 0-3.92 3.19-7.11 7.11-7.11a7.133 7.133 0 016.156 3.553l-3.076 1.78a3.567 3.567 0 00-3.08-1.78A3.56 3.56 0 008.444 12 3.56 3.56 0 0012 15.555a3.57 3.57 0 003.08-1.778l3.078 1.78A7.135 7.135 0 0112 19.11zm7.11-6.715h-.79v.79h-.79v-.79h-.79v-.79h.79v-.79h.79v.79h.79zm2.962 0h-.79v.79h-.79v-.79h-.79v-.79h.79v-.79h.79v.79h.79z",
+    },
 }
 
 THUMBS = {
@@ -82,13 +92,7 @@ def make_link(href: str, label: str, aria: str) -> str:
 
 
 def build_card(size, name, date, category, language, description, tags, demo, source, thumb) -> str:
-    """Génère le HTML d'une carte projet."""
-    size_class = "project-card--big" if size["value"] == "gros" else "project-card--small"
-
-    cover = ""
-    if size["value"] == "gros":
-        cover = f'    <span class="project-card__cover">{escape(name)}</span>\n'
-
+    """Génère une vitrine pour un projet majeur, une carte compacte pour un projet personnel."""
     tag_items = "".join(
         f"<li>{escape(tag.strip())}</li>" for tag in tags.split(",") if tag.strip()
     )
@@ -103,11 +107,40 @@ def build_card(size, name, date, category, language, description, tags, demo, so
     if not links:
         links = '<span class="project-card__soon">Lien bientôt disponible</span>'
 
-    return f'''<article class="project-card {size_class} reveal" data-category="{category["value"]}" data-language="{language["value"]}">
+    lang_icon = (
+        '<svg class="lang-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+        f'<path d="{language["icon"]}"/></svg>'
+    )
+    lang_badge = (
+        f'<span class="project-card__lang {language["badge"]}">'
+        f'{lang_icon}{language["label"]}</span>'
+    )
+
+    if size["value"] == "gros":
+        return f'''<article class="project-showcase reveal" data-category="{category["value"]}" data-language="{language["value"]}">
+  <div class="project-showcase__visual {thumb}">
+    <span class="project-card__badge">{category["label"]}</span>
+    {lang_badge}
+    <span class="project-showcase__index" aria-hidden="true"></span>
+    <span class="project-showcase__title">{escape(name)}</span>
+    <span class="project-card__arrow" aria-hidden="true">↗</span>
+  </div>
+  <div class="project-showcase__content">
+    <p class="project-card__meta">{escape(date)} · {size["label"]}</p>
+    <h3>{escape(name)}</h3>
+    <p>{escape(description)}</p>
+    <ul class="tags">{tag_items}</ul>
+    <div class="project-card__footer">
+      {links}
+    </div>
+  </div>
+</article>'''
+
+    return f'''<article class="project-card project-card--small reveal" data-category="{category["value"]}" data-language="{language["value"]}">
   <div class="project-card__thumb {thumb}">
     <span class="project-card__badge">{category["label"]}</span>
-    <span class="project-card__lang {language["badge"]}">{language["label"]}</span>
-{cover}    <span class="project-card__arrow" aria-hidden="true">↗</span>
+    {lang_badge}
+    <span class="project-card__arrow" aria-hidden="true">↗</span>
   </div>
   <div class="project-card__body">
     <p class="project-card__meta">{escape(date)} · {size["label"]}</p>

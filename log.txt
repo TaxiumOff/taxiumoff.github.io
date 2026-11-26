@@ -5,71 +5,80 @@ Mis à jour : 2026-11-26
 - Dépôt : C:\Users\ilian\Documents\Dev\Mon portfolio\taxiumoff.github.io
 - Remote : https://github.com/TaxiumOff/taxiumoff.github.io.git (branche main)
 - Historique récent :
+  - 379eecb Ajout du lien X et des logos GitHub/X
+  - f27bdf4 Ajout du log de contexte pour les futures sessions
   - b48d4c1 Ajout des petits et gros projets + assistant Python
-  - 8523af2 Update
-  - a4b0b8f Model
 - L'utilisateur demande à l'agent de committer ; c'est lui qui fait `git push`.
 - Stack : HTML/CSS/JS natifs, zéro dépendance, zéro build. Python sert uniquement à l'outil d'ajout de projets.
-- Arbre de travail propre avant la création de ce log.
+- Toujours vérifier `git status` en arrivant : il peut y avoir des modifications non commitées.
 
 2. FICHIERS
 - index.html : tout le contenu visible (sections, filtres, marqueurs de projets).
 - css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations et responsive.
 - js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, formulaire mailto, année du footer.
-- add_project.py : assistant console qui écrit directement dans index.html.
+- add_project.py : assistant console qui ajoute une carte dans index.html.
+- remove_project.py : assistant console qui liste et supprime une carte dans index.html.
 - README.md : instructions d'usage et personnalisation.
 - .gitignore : __pycache__/, *.py[cod], .DS_Store, Thumbs.db.
 
-3. STRUCTURE DES SECTIONS
-- #accueil : hero, nom "Ilian", vignette de code décorative.
-- #apropos : bio + compétences, eyebrow 01.
-- #projets : onglet "Petits projets", eyebrow 02, grille #projects-grid, vignettes de 110 px.
-- #gros-projets : onglet "Gros projets", eyebrow 03, grille #projects-big-grid, vignettes de 300 px avec le nom du projet affiché dessus.
-- #contact : eyebrow 04.
-- Navigation : Accueil, À propos, Petits projets, Gros projets, Contact.
-- Le bouton du hero "Voir mes projets" pointe sur #projets.
+3. STRUCTURE DES SECTIONS (ordre de haut en bas)
+- #accueil : hero avec "Ilian Maanan", vignette de code décorative, badge "Portfolio en évolution".
+- #apropos : intitulé "Profil", bio + compétences, eyebrow 01. Statistiques remplacées par des repères pro (1re, 2 domaines, Python).
+- #projets-majeurs : onglet "Projets majeurs", eyebrow 02, grille #projects-major-grid. Présentation en vitrine : grand visuel, titre dessus, numérotation automatique 01/02..., contenu à côté. Pas de filtre.
+- #projets-personnels : onglet "Projets personnels", eyebrow 03, en bas de page, grille #projects-personal-grid, vignettes compactes de 110 px avec filtres.
+- #contact : eyebrow 04, vocabulaire vouvoié ("Échangeons sur votre projet", "Votre nom", etc.).
+- Navigation : Accueil, À propos, Projets majeurs, Projets personnels, Contact.
+- Le bouton du hero "Découvrir mes projets" pointe sur #projets-majeurs.
 
 4. CATÉGORIES ET FILTRES
 - Catégories : jeux-video ("Jeux vidéo") et cybersecurite ("Cybersécurité").
 - Langages : python ("Python") et cpp ("C++").
-- Deux lignes de filtres dans CHAQUE section projets, avec "Tous" aux deux niveaux.
+- Les filtres n'existent QUE dans #projets-personnels (projets personnels) : deux lignes, Catégorie puis Langage, avec "Tous" aux deux niveaux.
 - Boutons : data-category-filter / data-language-filter, état aria-pressed.
-- Les filtres des deux sections sont synchronisés par valeur (on compare dataset[key], pas l'identité du bouton).
-- Règle d'affichage : une carte est visible seulement si la catégorie ET le langage correspondent, ou si le filtre est "all".
+- Les projets majeurs ne sont pas filtrés : ils restent tous visibles.
+- Règle d'affichage : une carte personnelle est visible seulement si la catégorie ET le langage correspondent, ou si le filtre est "all".
 - Messages d'attente automatiques : #projects-empty et #projects-big-empty.
 
 5. CONVENTIONS DES CARTES
-- Petite carte : <article class="project-card project-card--small reveal" data-category="..." data-language="...">
-- Grosse carte : project-card--big + <span class="project-card__cover">Nom du projet</span> dans la vignette.
+- Carte personnelle : <article class="project-card project-card--small reveal" data-category="..." data-language="..."> avec .project-card__thumb, .project-card__body, .project-card__footer.
+- Projet majeur : <article class="project-showcase reveal" data-category="..." data-language="..."> avec .project-showcase__visual (thumb + badges + .project-showcase__index + .project-showcase__title) et .project-showcase__content.
 - Styles de vignette : thumb--one (violet, jeux vidéo), thumb--two (vert, cybersécurité), thumb--three (orange, choix libre).
-- Badges : .project-card__badge = catégorie ; .project-card__lang avec .lang-python ou .lang-cpp = langage.
+- Badges : .project-card__badge = catégorie ; .project-card__lang avec .lang-python ou .lang-cpp = langage + <svg class="lang-icon"> (icône Simple Icons Python/C++) + texte.
+- Les icônes de langage sont intégrées dans le SVG généré par add_project.py ; .lang-icon mesure 14 px et reprend la couleur du texte (fill: currentColor).
 - NE PAS SUPPRIMER CES MARQUEURS :
     <!-- BEGIN SMALL PROJECTS --> ... <!-- END SMALL PROJECTS -->
     <!-- BEGIN BIG PROJECTS --> ... <!-- END BIG PROJECTS -->
 - Les cartes sont insérées juste avant le marqueur END correspondant.
+- remove_project.py repère les blocs <article> entre BEGIN et END par comptage des balises ; il ne touche jamais aux marqueurs ni aux commentaires.
 
-6. AJOUTER UN PROJET
-- Commande : python add_project.py (depuis le dossier du dépôt).
-- Questions posées : type (1 = petit, 2 = gros), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
-- Le script échappe le HTML (html.escape) et écrit directement dans index.html. Recharger la page ensuite.
-- Testé sur une copie temporaire pour un petit et un gros projet : OK. Aucun projet réel n'a encore été ajouté.
+6. AJOUTER / SUPPRIMER UN PROJET
+- Ajout : python add_project.py (depuis le dossier du dépôt).
+- Questions posées à l'ajout : type (1 = projet personnel, 2 = projet majeur), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
+- Le script d'ajout échappe le HTML (html.escape) et écrit directement dans index.html. Recharger la page ensuite.
+- Suppression : python remove_project.py. Il demande le type, affiche la liste des projets, accepte un numéro ou le nom exact (insensible à la casse), demande confirmation (o/n) puis retire le bloc <article>. Entrée vide = annulation, aucun fichier modifié.
+- Les deux scripts ont été testés sur des copies temporaires supprimées après vérification : ajout personnel/majeur, suppression par numéro et par nom, annulation sans modification, marqueurs intacts.
 
 7. IDENTITÉ ET TEXTES DÉJÀ PERSONNALISÉS
-- Ilian Maanan, initiales IM, titre "Ilian Maanan — Portfolio".
-- Hero : "Bonjour, je suis Ilian." / "Développeur de jeux vidéo et passionné de cybersécurité."
-- À propos : classe de première générale, Python, algorithmique, développement de jeux vidéo, cybersécurité.
+- Ilian Maanan, initiales IM, titre "Ilian Maanan — Développement de jeux vidéo & cybersécurité".
+- Hero : "Ilian Maanan" / "Étudiant · jeux vidéo & cybersécurité" / "Développeur de jeux vidéo en formation, passionné de cybersécurité et de Python." CTA "Découvrir mes projets".
+- À propos : intitulé "Profil", classe de première générale, Python, algorithmique, développement de jeux vidéo, cybersécurité.
 - Vignette de code du hero :
-    let mood = "joyeux"; // comme d'hab ;)
-    let objectif = "progresser"; // un jour à la fois
+    let mood = "motivé"; // constant
+    let objectif = "progresser"; // chaque jour
+- Contact vouvoié : "Échangeons sur votre projet", "Votre nom", "Votre e-mail", "Composer le message".
+- Les messages d'attente ne parlent plus de add_project.py : ils sont écrits pour un visiteur du site.
+- Métadonnées ajoutées : theme-color, og:type, og:title, og:description.
 - GitHub : https://github.com/TaxiumOff (présent dans le hero et le contact).
 - X : https://x.com/taxiumoff (présent dans le hero et le contact).
 - Les liens GitHub et X utilisent leurs vrais logos SVG inline, pas du texte (tailles 20 px dans le hero, 24 px dans le contact, via .socials a svg).
 
 8. RESTE À FAIRE / POINTS D'ATTENTION
-- Aucun projet pour l'instant : les deux grilles affichent leur message d'attente.
+- Une carte de test « Test » (003 · Jeux vidéo · Python) est présente dans #projects-personal-grid : elle a été ajoutée par l'utilisateur, ne pas la supprimer sans demande.
+- #projects-major-grid est vide et affiche son message d'attente.
 - Remplacer ton.email@example.com dans index.html (lien mailto) ET dans js/main.js (contactEmail).
 - Remplacer le href="#" restant (LinkedIn uniquement).
 - Ne pas inventer de projets : l'utilisateur n'en a pas encore.
+- Vocabulaire professionnel à conserver : "Projets majeurs", "Projets personnels", vouvoiement dans le contact, aucune référence à l'outil d'ajout dans la partie visible.
 - L'utilisateur aime qu'on pose des questions avant les changements de structure ; il choisit souvent les options "(recommandé)".
 - Toujours répondre en français.
 - Avant toute modification, regarder `git status` et `git diff` : l'utilisateur peut avoir édité les fichiers entre deux sessions.
@@ -77,6 +86,7 @@ Mis à jour : 2026-11-26
 9. COMMANDES UTILES
 - Lancer le site : python -m http.server 8000
 - Ajouter un projet : python add_project.py
+- Supprimer un projet : python remove_project.py
 - Vérifier le JS : node --check js/main.js
 - Voir l'état : git status --short
 - Commiter : git add -A puis git commit -m "..."
@@ -84,6 +94,8 @@ Mis à jour : 2026-11-26
 
 10. VÉRIFICATIONS DÉJÀ FAITES
 - Aucune erreur console au chargement de index.html dans le navigateur intégré.
-- Filtres testés (par exemple jeux-video + cpp) et synchronisés entre les deux grilles.
-- Insertions petit/gros projets testées sur une copie temporaire, avec échappement HTML correct.
+- Filtres testés uniquement sur les projets personnels (par exemple jeux-video + cpp masque la carte) ; les projets majeurs restent visibles.
+- Insertions personnel/majeur testées sur une copie temporaire : vitrine .project-showcase, carte compacte, icônes Python/C++, échappement HTML correct.
+- Suppressions testées sur une copie temporaire : par numéro (projet majeur), par nom exact avec « & » (projet personnel), annulation sans modification, marqueurs BEGIN/END conservés.
+- Responsive vérifié dans la logique CSS : 900 px (vitrine en une colonne), 760 px (menu mobile), 620 px (grilles en une colonne).
 - Équilibrage des accolades CSS et syntaxe JS/Python vérifiés.

@@ -73,42 +73,46 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-/* ---------- 4. Filtres des projets (catégorie + langage) ----------
+/* ---------- 4. Filtres des projets personnels ----------
    Catégories : jeux-video | cybersecurite
    Langages  : python | cpp
-   Une carte est affichée seulement si les deux filtres correspondent. */
+   Les projets majeurs sont présentés à part, sans filtre. */
 const categoryFilters = document.querySelectorAll("[data-category-filter]");
 const languageFilters = document.querySelectorAll("[data-language-filter]");
-const projectSections = [
-  { grid: document.querySelector("#projects-grid"), empty: document.querySelector("#projects-empty") },
-  { grid: document.querySelector("#projects-big-grid"), empty: document.querySelector("#projects-big-empty") },
-];
+const smallGrid = document.querySelector("#projects-personal-grid");
+const smallEmpty = document.querySelector("#projects-empty");
+const bigGrid = document.querySelector("#projects-major-grid");
+const bigEmpty = document.querySelector("#projects-big-empty");
 
 let activeCategory = "all";
 let activeLanguage = "all";
 
+/* Les projets personnels se filtrent par catégorie ET langage. */
 function applyProjectFilters() {
-  projectSections.forEach(({ grid, empty }) => {
-    if (!grid) return;
+  if (!smallGrid) return;
 
-    let visibleCount = 0;
+  let visibleCount = 0;
 
-    grid.querySelectorAll(".project-card").forEach((card) => {
-      const categoryOk = activeCategory === "all" || card.dataset.category === activeCategory;
-      const languageOk = activeLanguage === "all" || card.dataset.language === activeLanguage;
-      const visible = categoryOk && languageOk;
+  smallGrid.querySelectorAll(".project-card").forEach((card) => {
+    const categoryOk = activeCategory === "all" || card.dataset.category === activeCategory;
+    const languageOk = activeLanguage === "all" || card.dataset.language === activeLanguage;
+    const visible = categoryOk && languageOk;
 
-      card.hidden = !visible;
+    card.hidden = !visible;
 
-      if (visible) {
-        visibleCount += 1;
-        card.classList.remove("is-visible");
-        requestAnimationFrame(() => card.classList.add("is-visible"));
-      }
-    });
-
-    if (empty) empty.hidden = visibleCount > 0;
+    if (visible) {
+      visibleCount += 1;
+      card.classList.remove("is-visible");
+      requestAnimationFrame(() => card.classList.add("is-visible"));
+    }
   });
+
+  if (smallEmpty) smallEmpty.hidden = visibleCount > 0;
+}
+
+/* Les projets majeurs ne sont pas filtrés : ils sont toujours tous visibles. */
+if (bigGrid && bigEmpty) {
+  bigEmpty.hidden = bigGrid.querySelectorAll(".project-showcase, .project-card--big").length > 0;
 }
 
 function bindFilterGroup(buttons, key, onSelect) {
@@ -151,7 +155,7 @@ contactForm.addEventListener("submit", (event) => {
   );
 
   window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
-  formStatus.textContent = "Ton application e-mail s’ouvre avec le message pré-rempli.";
+  formStatus.textContent = "Votre application e-mail s’ouvre avec le message pré-rempli.";
 });
 
 /* ---------- 6. Année dans le pied de page ---------- */
