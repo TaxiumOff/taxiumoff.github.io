@@ -5,19 +5,22 @@ Mis à jour : 2026-11-26
 - Dépôt : C:\Users\ilian\Documents\Dev\Mon portfolio\taxiumoff.github.io
 - Remote : https://github.com/TaxiumOff/taxiumoff.github.io.git (branche main)
 - Historique récent :
+  - 2f3cc52 Remove et Add Projet
   - 379eecb Ajout du lien X et des logos GitHub/X
   - f27bdf4 Ajout du log de contexte pour les futures sessions
   - b48d4c1 Ajout des petits et gros projets + assistant Python
 - L'utilisateur demande à l'agent de committer ; c'est lui qui fait `git push`.
-- Stack : HTML/CSS/JS natifs, zéro dépendance, zéro build. Python sert uniquement à l'outil d'ajout de projets.
+- Stack : HTML/CSS/JS natifs, zéro dépendance, zéro build. Python sert uniquement aux outils de gestion des projets.
 - Toujours vérifier `git status` en arrivant : il peut y avoir des modifications non commitées.
 
 2. FICHIERS
 - index.html : tout le contenu visible (sections, filtres, marqueurs de projets).
 - css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations et responsive.
 - js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, formulaire mailto, année du footer.
-- add_project.py : assistant console qui ajoute une carte dans index.html.
-- remove_project.py : assistant console qui liste et supprime une carte dans index.html.
+- project_manager.py : application graphique Tkinter qui détecte les projets existants et permet de les modifier, d'en créer ou d'en supprimer. Sélection dans une arborescence "Projets personnels" / "Projets majeurs", formulaire à droite, boutons Actualiser / Nouveau projet / Supprimer / Enregistrer / Réinitialiser.
+- portfolio_lib.py : module partagé (lecture des marqueurs, parsing des blocs <article>, génération des cartes, insertion/remplacement/suppression). Utilisé par les 3 outils Python ; aucune dépendance autre que la bibliothèque standard.
+- add_project.py : assistant console qui ajoute une carte dans index.html via portfolio_lib.
+- remove_project.py : assistant console qui liste et supprime une carte dans index.html via portfolio_lib.
 - README.md : instructions d'usage et personnalisation.
 - .gitignore : __pycache__/, *.py[cod], .DS_Store, Thumbs.db.
 
@@ -51,12 +54,17 @@ Mis à jour : 2026-11-26
 - Les cartes sont insérées juste avant le marqueur END correspondant.
 - remove_project.py repère les blocs <article> entre BEGIN et END par comptage des balises ; il ne touche jamais aux marqueurs ni aux commentaires.
 
-6. AJOUTER / SUPPRIMER UN PROJET
-- Ajout : python add_project.py (depuis le dossier du dépôt).
+6. AJOUTER / MODIFIER / SUPPRIMER UN PROJET
+- Application graphique : python project_manager.py (Tkinter inclus dans Python, zéro dépendance).
+  - Détection automatique de tous les blocs <article> entre les marqueurs BEGIN/END des deux grilles au lancement et via "Actualiser depuis index.html".
+  - La liste affiche Type / numéro / nom / détails (date · catégorie · langage). Sélectionner une ligne pré-remplit le formulaire avec les valeurs détectées : nom, date, description, technologies, liens, section, catégorie, langage, vignette.
+  - "Enregistrer les modifications" régénère uniquement la carte sélectionnée ; si la section change, le bloc est déplacé de l'autre grille. "Nouveau projet" crée une carte ; "Supprimer" demande confirmation avant d'effacer le bloc.
+  - Les URL sont validées http(s) ; le HTML est échappé ; les marqueurs BEGIN/END ne sont jamais touchés. Recharger le navigateur après chaque changement.
+- Ajout console : python add_project.py (depuis le dossier du dépôt).
 - Questions posées à l'ajout : type (1 = projet personnel, 2 = projet majeur), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
-- Le script d'ajout échappe le HTML (html.escape) et écrit directement dans index.html. Recharger la page ensuite.
-- Suppression : python remove_project.py. Il demande le type, affiche la liste des projets, accepte un numéro ou le nom exact (insensible à la casse), demande confirmation (o/n) puis retire le bloc <article>. Entrée vide = annulation, aucun fichier modifié.
-- Les deux scripts ont été testés sur des copies temporaires supprimées après vérification : ajout personnel/majeur, suppression par numéro et par nom, annulation sans modification, marqueurs intacts.
+- Suppression console : python remove_project.py. Il demande le type, affiche la liste des projets, accepte un numéro ou le nom exact (insensible à la casse), demande confirmation (o/n) puis retire le bloc <article>. Entrée vide = annulation, aucun fichier modifié.
+- Les trois outils partagent portfolio_lib.py : une seule logique de parsing, de génération et d'écriture.
+- Tests effectués sur des copies temporaires dans %TEMP%\opencode-portfolio-test (index.html d'origine jamais modifié par les tests) : ajout personnel/moteur, parsing des champs avec "&" et balises HTML, modification avec changement de section personnel -> majeur, suppression, conservations des marqueurs, détection et pré-remplissage de l'UI Tkinter.
 
 7. IDENTITÉ ET TEXTES DÉJÀ PERSONNALISÉS
 - Ilian Maanan, initiales IM, titre "Ilian Maanan — Développement de jeux vidéo & cybersécurité".
@@ -85,9 +93,11 @@ Mis à jour : 2026-11-26
 
 9. COMMANDES UTILES
 - Lancer le site : python -m http.server 8000
+- Gérer les projets (UI) : python project_manager.py
 - Ajouter un projet : python add_project.py
 - Supprimer un projet : python remove_project.py
 - Vérifier le JS : node --check js/main.js
+- Vérifier la syntaxe Python : python -m py_compile portfolio_lib.py add_project.py remove_project.py project_manager.py
 - Voir l'état : git status --short
 - Commiter : git add -A puis git commit -m "..."
 - Le push est fait par l'utilisateur, pas par l'agent.

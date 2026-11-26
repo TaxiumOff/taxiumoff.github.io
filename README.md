@@ -14,7 +14,17 @@ python -m http.server 8000
 
 Puis va sur `http://localhost:8000`.
 
-## Ajouter un projet
+## Gérer les projets avec l’application graphique
+
+```powershell
+python project_manager.py
+```
+
+L’application détecte automatiquement les projets déjà présents dans `index.html` et les affiche dans la liste de gauche. Sélectionne un projet pour modifier son nom, sa date, sa description, ses technologies, ses liens, sa catégorie, son langage, sa vignette ou sa section, puis clique sur **Enregistrer les modifications**. Le bouton **Nouveau projet** crée une carte, et **Supprimer** retire la carte choisie après confirmation. Aucun projet n’est inventé par l’application : elle ne travaille que sur le contenu existant de `index.html`.
+
+Tkinter est inclus dans Python : aucune installation supplémentaire n’est nécessaire. Recharge le navigateur après chaque enregistrement.
+
+## Ajouter un projet depuis la console
 
 ```powershell
 python add_project.py
@@ -22,7 +32,7 @@ python add_project.py
 
 Le script pose les questions (type, nom, date, catégorie, langage, description, technologies, liens, style de vignette) et écrit directement la carte dans `index.html`, entre les marqueurs `BEGIN/END` de la bonne grille. Choisis `1` pour un **projet personnel** (carte compacte avec icône de langage) ou `2` pour un **projet majeur** (présentation en vitrine, sans filtre), puis recharge la page.
 
-## Supprimer un projet
+## Supprimer un projet depuis la console
 
 ```powershell
 python remove_project.py
@@ -36,6 +46,8 @@ Le script liste les projets du type choisi, demande le **numéro ou le nom exact
 index.html         Contenu et sections
 css/style.css      Couleurs, mise en page, animations
 js/main.js         Thème, menu, filtres, formulaire
+project_manager.py Application graphique pour gérer les projets
+portfolio_lib.py   Fonctions partagées de lecture et d'écriture des cartes
 add_project.py     Assistant console pour ajouter des projets
 remove_project.py  Assistant console pour supprimer un projet
 ```
@@ -43,7 +55,7 @@ remove_project.py  Assistant console pour supprimer un projet
 ## Ce qu’il faut personnaliser
 
 1. **Identité ✅** déjà renseignée pour Ilian Maanan : titre, initiales (`IM`), hero, « À propos » et pied de page.
-2. **Tes projets** : lance `python add_project.py` pour ajouter une carte dans `#projects-personal-grid` (projets personnels) ou `#projects-major-grid` (projets majeurs), et `python remove_project.py` pour en retirer une. Ne supprime pas les marqueurs `BEGIN/END`. Tant qu’une grille est vide, un message d’attente s’affiche.
+2. **Tes projets** : lance `python project_manager.py` pour créer, modifier ou supprimer des cartes dans `#projects-personal-grid` (projets personnels) et `#projects-major-grid` (projets majeurs). Les scripts `add_project.py` et `remove_project.py` restent disponibles en console. Ne supprime pas les marqueurs `BEGIN/END`. Tant qu’une grille est vide, un message d’attente s’affiche.
 3. **Tes liens** : GitHub (`TaxiumOff`) et X (`taxiumoff`) sont déjà renseignés avec leurs logos SVG. Reste le `href="#"` de LinkedIn à remplacer.
 4. **Adresse e-mail ✅ à faire** : remplace `ton.email@example.com` dans `index.html` (lien `mailto:`) **et** dans `js/main.js` (`contactEmail`).
 5. **Tes couleurs** : modifie les variables `--accent`, `--accent-2`, `--bg`… en haut de `css/style.css`. Le thème clair se règle juste en dessous (`[data-theme="light"]`).
@@ -58,6 +70,7 @@ remove_project.py  Assistant console pour supprimer un projet
 - Projets personnels en bas de page : vignettes compactes, badges avec l’icône du langage et son texte
 - Filtres Catégorie → Langage avec « Tous » à chaque niveau et `aria-pressed`, uniquement sur les projets personnels
 - Vocabulaire et messages d’attente professionnels : aucune référence à l’outil d’ajout dans la partie visible du site
+- Application graphique Tkinter pour détecter et gérer les projets sans éditer le HTML à la main
 - Outils console pour ajouter et supprimer un projet sans éditer le HTML à la main
 - État vide automatique quand aucune carte n’est présente
 - Formulaire qui ouvre l’application e-mail avec le message pré-rempli (aucun backend)
