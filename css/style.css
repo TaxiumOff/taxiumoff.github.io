@@ -279,10 +279,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   color: var(--muted);
   font-size: 0.9rem;
   transition: color 0.2s, transform 0.2s var(--ease);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
+.socials a svg { width: 20px; height: 20px; fill: currentColor; }
 .socials a:hover { color: var(--accent-2); transform: translateY(-2px); }
 .socials--large { margin-top: 1.75rem; gap: 1.5rem; }
+.socials--large a svg { width: 24px; height: 24px; }
 
 .section { padding: 6.5rem 0; }
 .section--alt { background: color-mix(in srgb, var(--bg-alt) 75%, transparent); border-block: 1px solid var(--border); }

@@ -62,11 +62,13 @@ Mis à jour : 2026-11-26
     let mood = "joyeux"; // comme d'hab ;)
     let objectif = "progresser"; // un jour à la fois
 - GitHub : https://github.com/TaxiumOff (présent dans le hero et le contact).
+- X : https://x.com/taxiumoff (présent dans le hero et le contact).
+- Les liens GitHub et X utilisent leurs vrais logos SVG inline, pas du texte (tailles 20 px dans le hero, 24 px dans le contact, via .socials a svg).
 
 8. RESTE À FAIRE / POINTS D'ATTENTION
 - Aucun projet pour l'instant : les deux grilles affichent leur message d'attente.
 - Remplacer ton.email@example.com dans index.html (lien mailto) ET dans js/main.js (contactEmail).
-- Remplacer les href="#" restants (LinkedIn, X).
+- Remplacer le href="#" restant (LinkedIn uniquement).
 - Ne pas inventer de projets : l'utilisateur n'en a pas encore.
 - L'utilisateur aime qu'on pose des questions avant les changements de structure ; il choisit souvent les options "(recommandé)".
 - Toujours répondre en français.

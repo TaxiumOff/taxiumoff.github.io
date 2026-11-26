@@ -35,7 +35,7 @@ add_project.py   Assistant console pour ajouter des projets
 
 1. **Identité ✅** déjà renseignée pour Ilian Maanan : titre, initiales (`IM`), hero, « À propos » et pied de page.
 2. **Tes projets** : lance `python add_project.py`. Il remplit `#projects-grid` (petits projets) ou `#projects-big-grid` (gros projets) selon ton choix. Ne supprime pas les marqueurs `BEGIN/END`. Tant qu’une grille est vide, un message d’attente s’affiche.
-3. **Tes liens** : GitHub pointe déjà vers `TaxiumOff`. Remplace les `href="#"` restants (X, LinkedIn) par tes profils.
+3. **Tes liens** : GitHub (`TaxiumOff`) et X (`taxiumoff`) sont déjà renseignés avec leurs logos SVG. Reste le `href="#"` de LinkedIn à remplacer.
 4. **Ton e-mail ✅ à faire** : remplace `ton.email@example.com` dans `index.html` (lien `mailto:`) **et** dans `js/main.js` (`contactEmail`).
 5. **Tes couleurs** : modifie les variables `--accent`, `--accent-2`, `--bg`… en haut de `css/style.css`. Le thème clair se règle juste en dessous (`[data-theme="light"]`).
 
