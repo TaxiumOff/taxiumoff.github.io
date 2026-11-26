@@ -73,31 +73,56 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-/* ---------- 4. Filtre des projets ---------- */
-const filters = document.querySelectorAll(".filter");
+/* ---------- 4. Filtres des projets (catégorie + langage) ----------
+   Catégories : jeux-video | cybersecurite
+   Langages  : python | cpp
+   Une carte est affichée seulement si les deux filtres correspondent. */
+const categoryFilters = document.querySelectorAll("[data-category-filter]");
+const languageFilters = document.querySelectorAll("[data-language-filter]");
 const projects = document.querySelectorAll(".project-card");
+const projectsEmpty = document.querySelector("#projects-empty");
 
-filters.forEach((button) => {
-  button.addEventListener("click", () => {
-    const filter = button.dataset.filter;
+let activeCategory = "all";
+let activeLanguage = "all";
 
-    filters.forEach((item) => {
-      const active = item === button;
-      item.classList.toggle("is-active", active);
-      item.setAttribute("aria-pressed", String(active));
-    });
+function applyProjectFilters() {
+  let visibleCount = 0;
 
-    projects.forEach((card) => {
-      const visible = filter === "all" || card.dataset.category === filter;
-      card.hidden = !visible;
+  projects.forEach((card) => {
+    const categoryOk = activeCategory === "all" || card.dataset.category === activeCategory;
+    const languageOk = activeLanguage === "all" || card.dataset.language === activeLanguage;
+    const visible = categoryOk && languageOk;
 
-      if (visible) {
-        card.classList.remove("is-visible");
-        requestAnimationFrame(() => card.classList.add("is-visible"));
-      }
+    card.hidden = !visible;
+
+    if (visible) {
+      visibleCount += 1;
+      card.classList.remove("is-visible");
+      requestAnimationFrame(() => card.classList.add("is-visible"));
+    }
+  });
+
+  if (projectsEmpty) projectsEmpty.hidden = visibleCount > 0;
+}
+
+function bindFilterGroup(buttons, onSelect) {
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      buttons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("is-active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+
+      onSelect(button.dataset.categoryFilter ?? button.dataset.languageFilter);
+      applyProjectFilters();
     });
   });
-});
+}
+
+bindFilterGroup(categoryFilters, (value) => { activeCategory = value; });
+bindFilterGroup(languageFilters, (value) => { activeLanguage = value; });
+applyProjectFilters();
 
 /* ---------- 5. Formulaire de contact ----------
    Version sans serveur : ouvre l’application e-mail avec le message pré-rempli.

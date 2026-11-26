@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Portfolio — présente tes projets, tes compétences et tes coordonnées.">
-  <title>Ton Prénom Nom — Portfolio</title>
+  <meta name="description" content="Portfolio d’Ilian Maanan — développement de jeux vidéo, Python et cybersécurité.">
+  <title>Ilian Maanan — Portfolio</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/main.js" defer></script>
 </head>
@@ -22,8 +22,8 @@
     <div class="container header__inner">
       <!-- À PERSONNALISER : nom + initiales -->
       <a class="brand" href="#accueil" aria-label="Retour à l’accueil">
-        <span class="brand__mark">TN</span>
-        <span class="brand__name">Ton Prénom Nom</span>
+        <span class="brand__mark">IM</span>
+        <span class="brand__name">Ilian Maanan</span>
       </a>
 
       <nav class="nav" id="navigation" aria-label="Navigation principale">
@@ -50,11 +50,10 @@
     <section class="hero" id="accueil">
       <div class="container hero__inner">
         <div class="hero__content">
-          <p class="eyebrow reveal"><span class="pulse-dot"></span> Disponible pour de nouveaux projets</p>
-          <!-- À PERSONNALISER -->
-          <h1 class="reveal" style="--delay: 80ms">Bonjour, je suis <span class="gradient-text">Ton Prénom</span>.</h1>
+          <p class="eyebrow reveal"><span class="pulse-dot"></span> En apprentissage · jeux vidéo &amp; cybersécurité</p>
+          <h1 class="reveal" style="--delay: 80ms">Bonjour, je suis <span class="gradient-text">Ilian</span>.</h1>
           <p class="hero__lead reveal" style="--delay: 160ms">
-            Développeur web, créateur de choses utiles et curieux de tout. Voici une vitrine de ce que je construis — à compléter avec tes projets.
+            Développeur de jeux vidéo et passionné de cybersécurité.
           </p>
           <div class="hero__actions reveal" style="--delay: 240ms">
             <a class="btn btn--primary" href="#projets">
@@ -65,8 +64,7 @@
           </div>
           <!-- À PERSONNALISER : remplacer # par tes profils -->
           <ul class="socials reveal" style="--delay: 320ms" aria-label="Mes profils">
-            <li><a href="#" aria-label="GitHub">GitHub</a></li>
-            <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
+            <li><a href="https://github.com/taxiumoff" target="_blank" rel="noopener noreferrer" aria-label="GitHub (nouvel onglet)">GitHub</a></li>
             <li><a href="#" aria-label="Twitter / X">X</a></li>
           </ul>
         </div>
@@ -77,9 +75,12 @@
             <div class="code-card__bar"><span></span><span></span><span></span><small>portfolio.js</small></div>
             <div class="code-card__body">
               <p><span class="c-purple">const</span> <span class="c-blue">projets</span> = [</p>
-              <p class="indent">&quot;À compléter&quot;, <span class="c-muted">// ton premier projet</span></p>
-              <p class="indent">&quot;À imaginer&quot;, <span class="c-muted">// celui qui te ressemble</span></p>
+              <p class="indent"><span class="c-string">&quot;À compléter&quot;</span>, <span class="c-muted">// ton premier projet</span></p>
+              <p class="indent"><span class="c-string">&quot;À imaginer&quot;</span>, <span class="c-muted">// celui qui te ressemble</span></p>
               <p>];</p>
+              <p class="spacer">&nbsp;</p>
+              <p><span class="c-purple">let</span> <span class="c-blue">mood</span> = <span class="c-string">&quot;joyeux&quot;</span>; <span class="c-muted">// comme d'hab ;)</span></p>
+              <p><span class="c-purple">let</span> <span class="c-blue">objectif</span> = <span class="c-string">&quot;progresser&quot;</span>; <span class="c-muted">// un jour à la fois</span></p>
               <p class="spacer">&nbsp;</p>
               <p><span class="c-purple">export default</span> <span class="c-blue">moi</span>;</p>
             </div>
@@ -96,26 +97,28 @@
         <header class="section__head reveal">
           <p class="eyebrow">01 / À propos</p>
           <h2>Un peu de contexte</h2>
-          <p class="section__intro">Qui es-tu, ce que tu aimes faire, et ce que tu cherches à apprendre.</p>
+          <p class="section__intro">Un peu sur moi, mes centres d’intérêt et ce que j’apprends en ce moment.</p>
         </header>
 
         <div class="about__grid">
           <article class="panel reveal" style="--delay: 80ms">
             <h3>Qui suis-je&nbsp;?</h3>
-            <p>À compléter : quelques phrases sur ton parcours, ce qui te motive, ton approche d’un projet. Garde ça simple et humain.</p>
+            <p>Je m'appelle Ilian Maanan, je suis actuellement en classe de première générale et je cherche à approfondir mes connaissances en développement de jeux vidéo et en cybersécurité.</p>
             <ul class="stats">
-              <li><strong>3+</strong><span>années de pratique</span></li>
-              <li><strong>12</strong><span>projets réalisés</span></li>
+              <li><strong>7</strong><span>années de pratique</span></li>
+              <li><strong>0</strong><span>projets réalisés</span></li>
               <li><strong>∞</strong><span>idées en tête</span></li>
             </ul>
           </article>
 
           <article class="panel reveal" style="--delay: 160ms">
             <h3>Compétences</h3>
-            <p>À compléter : remplace ces puces par tes technologies et tes points forts.</p>
+            <p>J’apprends Python en ce moment, ainsi que les bases de l’algorithmique, du développement de jeux vidéo et de la cybersécurité. Je complète cette liste au fur et à mesure de mes projets.</p>
             <ul class="tags">
-              <li>HTML</li><li>CSS</li><li>JavaScript</li><li>TypeScript</li>
-              <li>React</li><li>Node.js</li><li>Git</li><li>UX / UI</li>
+              <li>Python</li>
+              <li>Algorithmique</li>
+              <li>Jeux vidéo</li>
+              <li>Cybersécurité</li>
             </ul>
           </article>
         </div>
@@ -128,73 +131,62 @@
         <header class="section__head reveal">
           <p class="eyebrow">02 / Projets</p>
           <h2>Ce que j’ai construit</h2>
-          <p class="section__intro">Une sélection de projets. Duplique une carte pour en ajouter d’autres.</p>
+          <p class="section__intro">Mes projets seront rangés par domaine, puis par langage. La structure est prête : il ne manque plus que les projets.</p>
         </header>
 
         <div class="filters reveal" role="group" aria-label="Filtrer les projets">
-          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Tous</button>
-          <button class="filter" type="button" data-filter="web" aria-pressed="false">Web</button>
-          <button class="filter" type="button" data-filter="app" aria-pressed="false">Applications</button>
-          <button class="filter" type="button" data-filter="experiment" aria-pressed="false">Expériences</button>
+          <div class="filter-group">
+            <p class="filter-group__label" id="filter-category-label">Catégorie</p>
+            <div class="filter-row" role="group" aria-labelledby="filter-category-label">
+              <button class="filter is-active" type="button" data-category-filter="all" aria-pressed="true">Tous</button>
+              <button class="filter" type="button" data-category-filter="jeux-video" aria-pressed="false">Jeux vidéo</button>
+              <button class="filter" type="button" data-category-filter="cybersecurite" aria-pressed="false">Cybersécurité</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <p class="filter-group__label" id="filter-language-label">Langage</p>
+            <div class="filter-row" role="group" aria-labelledby="filter-language-label">
+              <button class="filter is-active" type="button" data-language-filter="all" aria-pressed="true">Tous</button>
+              <button class="filter" type="button" data-language-filter="python" aria-pressed="false">Python</button>
+              <button class="filter" type="button" data-language-filter="cpp" aria-pressed="false">C++</button>
+            </div>
+          </div>
         </div>
 
         <div class="projects" id="projects-grid">
-          <!-- À PERSONNALISER : carte de projet n°1 -->
-          <article class="project-card reveal" data-category="web" style="--delay: 0ms">
-            <div class="project-card__thumb thumb--one">
-              <span class="project-card__badge">Web</span>
-              <span class="project-card__arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-card__body">
-              <p class="project-card__meta">2026 · Projet personnel</p>
-              <h3>Nom du projet 01</h3>
-              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
-              <ul class="tags"><li>HTML</li><li>CSS</li><li>JS</li></ul>
-            </div>
-            <div class="project-card__footer">
-              <a href="#" aria-label="Voir le projet 01">Voir le projet <span aria-hidden="true">→</span></a>
-              <a href="#" aria-label="Code source du projet 01">Code source</a>
-            </div>
-          </article>
+          <!--
+            MODÈLE DE CARTE À DUPLIQUER ICI, SANS GARDER LES ESPACES DEVANT <article> :
 
-          <!-- À PERSONNALISER : carte de projet n°2 -->
-          <article class="project-card reveal" data-category="app" style="--delay: 80ms">
-            <div class="project-card__thumb thumb--two">
-              <span class="project-card__badge">Application</span>
-              <span class="project-card__arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-card__body">
-              <p class="project-card__meta">2025 · Projet d’équipe</p>
-              <h3>Nom du projet 02</h3>
-              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
-              <ul class="tags"><li>React</li><li>API</li></ul>
-            </div>
-            <div class="project-card__footer">
-              <a href="#" aria-label="Voir le projet 02">Voir le projet <span aria-hidden="true">→</span></a>
-              <a href="#" aria-label="Code source du projet 02">Code source</a>
-            </div>
-          </article>
+            <article class="project-card reveal" data-category="jeux-video" data-language="python">
+              <div class="project-card__thumb thumb--one">
+                <span class="project-card__badge">Jeux vidéo</span>
+                <span class="project-card__lang lang-python">Python</span>
+                <span class="project-card__arrow" aria-hidden="true">↗</span>
+              </div>
+              <div class="project-card__body">
+                <p class="project-card__meta">2026 · Projet personnel</p>
+                <h3>Nom du projet</h3>
+                <p>Une courte description.</p>
+                <ul class="tags"><li>Python</li></ul>
+              </div>
+              <div class="project-card__footer">
+                <a href="#">Voir le projet →</a>
+                <a href="#">Code source</a>
+              </div>
+            </article>
 
-          <!-- À PERSONNALISER : carte de projet n°3 -->
-          <article class="project-card reveal" data-category="experiment" style="--delay: 160ms">
-            <div class="project-card__thumb thumb--three">
-              <span class="project-card__badge">Expérience</span>
-              <span class="project-card__arrow" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-card__body">
-              <p class="project-card__meta">2025 · Expérimentation</p>
-              <h3>Nom du projet 03</h3>
-              <p>Une phrase pour expliquer le problème résolu et ce que tu as appris.</p>
-              <ul class="tags"><li>Canvas</li><li>Animation</li></ul>
-            </div>
-            <div class="project-card__footer">
-              <a href="#" aria-label="Voir le projet 03">Voir le projet <span aria-hidden="true">→</span></a>
-              <a href="#" aria-label="Code source du projet 03">Code source</a>
-            </div>
-          </article>
+            data-category : "jeux-video" ou "cybersecurite"
+            data-language : "python" ou "cpp"
+            Le badge et le .project-card__lang doivent reprendre les mêmes valeurs.
+          -->
         </div>
 
-        <p class="hint reveal">Astuce : copie-colle une carte, change son contenu et son <code>data-category</code> pour la classer dans les filtres.</p>
+        <div class="empty-state" id="projects-empty" role="status">
+          <span class="empty-state__icon" aria-hidden="true">✦</span>
+          <h3>Aucun projet pour le moment</h3>
+          <p>La structure est prête : ajoute tes projets <strong>jeux vidéo</strong> ou <strong>cybersécurité</strong>, codés en Python ou C++, pour les voir apparaître ici.</p>
+        </div>
       </div>
     </section>
 
@@ -214,7 +206,7 @@
             <p>Le plus simple reste l’e-mail. Réponds-moi aussi sur tes réseaux préférés.</p>
             <a class="btn btn--primary" href="mailto:ton.email@example.com">ton.email@example.com</a>
             <ul class="socials socials--large">
-              <li><a href="#">GitHub</a></li>
+              <li><a href="https://github.com/taxiumoff" target="_blank" rel="noopener noreferrer" aria-label="GitHub (nouvel onglet)">GitHub</a></li>
               <li><a href="#">LinkedIn</a></li>
               <li><a href="#">X</a></li>
             </ul>
@@ -249,7 +241,7 @@
 
   <footer class="site-footer">
     <div class="container footer__inner">
-      <p>© <span id="year">2026</span> Ton Prénom Nom — portfolio à compléter.</p>
+      <p>© <span id="year">2026</span> Ilian Maanan — portfolio.</p>
       <a href="#accueil">Retour en haut ↑</a>
     </div>
   </footer>
