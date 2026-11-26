@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 INDEX = ROOT / "index.html"
+SOURCE_DIR = ROOT / "source_code"
 
 MARKERS = {
     "petit": ("<!-- BEGIN SMALL PROJECTS -->", "<!-- END SMALL PROJECTS -->"),
@@ -121,6 +122,17 @@ def parse_tags(tags: str) -> str:
     return items
 
 
+def normalize_asset_path(value: str) -> str:
+    """Accepte uniquement un chemin relatif sûr, avec des slashs URL."""
+    value = (value or "").strip().replace("\\", "/")
+    if not value:
+        return ""
+    parts = value.split("/")
+    if value.startswith("/") or ".." in parts or ":" in parts[0]:
+        raise PortfolioError(f"Chemin de fichier invalide : {value}")
+    return value
+
+
 def normalize_project(data: dict) -> dict:
     """Vérifie et normalise les valeurs avant génération du HTML."""
     size = data.get("size", "petit")
@@ -158,7 +170,61 @@ def normalize_project(data: dict) -> dict:
         "demo": safe_links["demo"],
         "source": safe_links["source"],
         "thumb": thumb,
+        "code_file": normalize_asset_path(data.get("code_file", "")),
+        "report_file": normalize_asset_path(data.get("report_file", "")),
+        "report_text": data.get("report_text", "").strip(),
     }
+
+
+def build_code_viewer(project: dict) -> str:
+    """Prépare le lecteur de code et le rapport, en lecture seule."""
+    if not project["code_file"] and not project["report_file"] and not project["report_text"]:
+        return ""
+
+    parts = [
+        '<details class="code-viewer">',
+        '<summary class="code-viewer__toggle">'
+        '<span class="code-viewer__label">Voir le code et le rapport</span>'
+        '<span class="code-viewer__hint">Lecture seule</span>'
+        '<span class="code-viewer__chevron" aria-hidden="true">⌄</span>'
+        "</summary>",
+    ]
+
+    if project["code_file"]:
+        code_path = escape(project["code_file"], quote=True)
+        file_name = escape(project["code_file"].split("/")[-1])
+        parts.append(
+            '<div class="code-editor">'
+            '<div class="code-editor__bar">'
+            '<span class="code-editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>'
+            f'<span class="code-editor__file">{file_name}</span>'
+            '<span class="code-editor__mode">Lecture seule</span>'
+            "</div>"
+            '<div class="code-editor__scroll">'
+            '<pre class="code-editor__gutter" aria-hidden="true"></pre>'
+            f'<pre class="code-editor__body"><code data-code-src="{code_path}">Chargement du code…</code></pre>'
+            "</div>"
+            "</div>"
+        )
+
+    if project["report_file"]:
+        report_path = escape(project["report_file"], quote=True)
+        parts.append(
+            '<div class="code-report">'
+            '<h4>À propos du code</h4>'
+            f'<div class="code-report__body" data-report-src="{report_path}">Chargement du rapport…</div>'
+            "</div>"
+        )
+    elif project["report_text"]:
+        parts.append(
+            '<div class="code-report">'
+            "<h4>À propos du code</h4>"
+            f'<div class="code-report__body">{escape(project["report_text"])}</div>'
+            "</div>"
+        )
+
+    parts.append("</details>")
+    return "\n".join(parts)
 
 
 def build_card(data: dict) -> str:
@@ -194,12 +260,20 @@ def build_card(data: dict) -> str:
         f'{lang_icon}{language["label"]}</span>'
     )
 
+    code_attrs = ""
+    if project["code_file"]:
+        code_attrs += f' data-code-file="{escape(project["code_file"], quote=True)}"'
+    if project["report_file"]:
+        code_attrs += f' data-report-file="{escape(project["report_file"], quote=True)}"'
+
     meta = escape(project["date"]) if project["date"] else size["label"]
     if project["date"]:
         meta = f"{meta} · {size['label']}"
 
+    viewer = build_code_viewer(project)
+
     if project["size"] == "gros":
-        return f'''<article class="project-showcase reveal" data-category="{project["category"]}" data-language="{project["language"]}">
+        return f'''<article class="project-showcase reveal" data-category="{project["category"]}" data-language="{project["language"]}"{code_attrs}>
   <div class="project-showcase__visual {project["thumb"]}">
     <span class="project-card__badge">{category["label"]}</span>
     {lang_badge}
@@ -215,10 +289,11 @@ def build_card(data: dict) -> str:
     <div class="project-card__footer">
       {links}
     </div>
+    {viewer}
   </div>
 </article>'''
 
-    return f'''<article class="project-card project-card--small reveal" data-category="{project["category"]}" data-language="{project["language"]}">
+    return f'''<article class="project-card project-card--small reveal" data-category="{project["category"]}" data-language="{project["language"]}"{code_attrs}>
   <div class="project-card__thumb {project["thumb"]}">
     <span class="project-card__badge">{category["label"]}</span>
     {lang_badge}
@@ -233,6 +308,7 @@ def build_card(data: dict) -> str:
   <div class="project-card__footer">
     {links}
   </div>
+  {viewer}
 </article>'''
 
 
@@ -352,6 +428,12 @@ def extract_project(block: str, size_value: str, start: int, end: int) -> dict:
         read_attribute(block, "data-category"), "thumb--one"
     )
 
+    report_text = clean_text(
+        find_section(block, r'<div class="code-report__body"[^>]*>(.*?)</div>')
+    )
+    if report_text.startswith("Chargement du rapport"):
+        report_text = ""
+
     return {
         "start": start,
         "end": end,
@@ -365,6 +447,9 @@ def extract_project(block: str, size_value: str, start: int, end: int) -> dict:
         "demo": links["demo"],
         "source": links["source"],
         "thumb": thumb,
+        "code_file": read_attribute(block, "data-code-file"),
+        "report_file": read_attribute(block, "data-report-file"),
+        "report_text": report_text,
         "block": block,
     }
 

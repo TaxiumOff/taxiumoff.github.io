@@ -608,6 +608,87 @@ ul { margin: 0; padding: 0; list-style: none; }
 .project-card__footer a:last-child { color: var(--muted); }
 .project-card__footer a:hover { color: var(--text); }
 
+/*Lecteur de code intégré aux projets (lecture seule)*/
+.code-viewer { border-top: 1px solid var(--border); background: var(--surface); }
+.code-viewer__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.4rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.code-viewer__toggle::-webkit-details-marker { display: none; }
+.code-viewer__label { flex: 1; }
+.code-viewer__hint {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+.code-viewer__chevron { color: var(--accent-2); transition: transform 0.25s var(--ease); }
+.code-viewer[open] .code-viewer__chevron { transform: rotate(180deg); }
+.code-viewer[open] .code-viewer__toggle { border-bottom: 1px solid var(--border); }
+.code-editor { margin: 1rem 1.4rem 0; overflow: hidden; border: 1px solid #26304a; border-radius: 12px; background: #111626; }
+.code-editor__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid #26304a;
+  background: #0d1120;
+  color: #a9b4cf;
+  font-size: 0.72rem;
+}
+.code-editor__dots { display: inline-flex; gap: 0.35rem; }
+.code-editor__dots i { width: 8px; height: 8px; border-radius: 50%; background: #ff6b6b; }
+.code-editor__dots i:nth-child(2) { background: #ffd166; }
+.code-editor__dots i:nth-child(3) { background: #35d6a0; }
+.code-editor__file { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.code-editor__mode { color: #6f7fa6; }
+.code-editor__scroll { display: flex; max-height: 360px; overflow: auto; }
+.code-editor__gutter,
+.code-editor__body {
+  margin: 0;
+  padding: 1rem 0.85rem;
+  color: #dce4f5;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  tab-size: 4;
+}
+.code-editor__gutter {
+  position: sticky;
+  left: 0;
+  flex: none;
+  min-width: 3rem;
+  padding-right: 0.6rem;
+  border-right: 1px solid #26304a;
+  background: #0d1120;
+  color: #586488;
+  text-align: right;
+  user-select: none;
+}
+.code-editor__body { flex: 1; overflow: visible; white-space: pre; }
+.code-editor__body code { font: inherit; }
+.tok-keyword { color: #c792ea; }
+.tok-string { color: #c3e88d; }
+.tok-comment { color: #64748b; font-style: italic; }
+.tok-preproc { color: #82aaff; }
+.tok-number { color: #f78c6c; }
+.code-report { margin: 1rem 1.4rem 1.3rem; padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 10px; background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.code-report h4 { margin-bottom: 0.5rem; color: var(--accent-2); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.code-report__body { color: var(--muted); font-size: 0.88rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.project-showcase .code-viewer { margin-top: auto; border: 1px solid var(--border); border-radius: 12px; }
+.project-showcase .code-viewer__toggle { padding: 0.8rem 1rem; }
+.project-showcase .code-editor,
+.project-showcase .code-report { margin-left: 1rem; margin-right: 1rem; }
+
 .empty-state {
   padding: 3rem 1.5rem;
   border: 1px dashed var(--border);
@@ -722,6 +803,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   .stats { gap: 1.5rem; }
   .panel { padding: 1.5rem; }
   .floating-badge { left: 50%; right: auto; translate: -50% 0; white-space: nowrap; }
+  .code-viewer__toggle { padding: 0.8rem 1rem; }
+  .code-editor,
+  .code-report { margin-left: 1rem; margin-right: 1rem; }
+  .code-editor__gutter { min-width: 2.4rem; padding-left: 0.5rem; padding-right: 0.4rem; }
+  .code-editor__body,
+  .code-editor__gutter { font-size: 0.75rem; }
 }
 
 /* ---------- Respect des préférences d’accessibilité ---------- */

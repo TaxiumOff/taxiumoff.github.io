@@ -9,8 +9,12 @@ de index.html et permet de les modifier, d'en ajouter ou d'en supprimer.
 Tkinter est inclus dans Python : aucune dépendance à installer.
 """
 
+import re
+import shutil
 import tkinter as tk
-from tkinter import messagebox, ttk
+import unicodedata
+from pathlib import Path
+from tkinter import filedialog, messagebox, ttk
 
 from portfolio_lib import (
     CATEGORIES,
@@ -19,6 +23,7 @@ from portfolio_lib import (
     PortfolioError,
     SIZE_VALUES,
     SIZES,
+    SOURCE_DIR,
     THUMBS,
     describe,
     insert_card,
@@ -26,6 +31,13 @@ from portfolio_lib import (
     remove_card,
     replace_card,
 )
+
+
+def slugify(value: str) -> str:
+    """Transforme un nom de projet en nom de dossier sûr."""
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
+    value = re.sub(r"[^a-zA-Z0-9]+", "-", value).strip("-").lower()
+    return value or "projet"
 
 
 class ProjectManager(tk.Tk):
@@ -118,23 +130,43 @@ class ProjectManager(tk.Tk):
             ("tags", "Technologies (séparées par des virgules)", False),
             ("demo", "Lien de démonstration", False),
             ("source", "Lien du code source", False),
+            ("folder", "Dossier du code", False),
+            ("code", "Fichier de code", False),
+            ("report", "Rapport / description du code", False),
         ]
 
         for row, (key, label, required) in enumerate(rows):
             ttk.Label(form_frame, text=label).grid(
                 row=row, column=0, sticky="nw", pady=(0, 10)
             )
-            height = 5 if key == "description" else 1
-            entry = tk.Text(form_frame, height=height, wrap="word") if height > 1 else ttk.Entry(form_frame)
+            height = 5 if key == "description" else 6 if key == "report" else 1
+            entry = (
+                tk.Text(form_frame, height=height, wrap="word")
+                if height > 1
+                else ttk.Entry(form_frame)
+            )
             entry.grid(row=row, column=1, sticky="ew", pady=(0, 10), padx=(10, 0))
+            self.fields[key] = entry
+
             if key == "tags":
                 ttk.Label(
                     form_frame,
-                    text="Python, Tkinter,analyse de données",
+                    text="Python, Tkinter, analyse de données",
                     foreground="#9ca3af",
                 ).grid(row=row, column=2, sticky="w", padx=(6, 0))
-            self.fields[key] = entry
-            if required:
+            elif key == "folder":
+                ttk.Label(
+                    form_frame, text="source_code/", foreground="#9ca3af"
+                ).grid(row=row, column=2, sticky="w", padx=(6, 0))
+            elif key == "code":
+                ttk.Button(
+                    form_frame, text="Parcourir…", command=self.browse_code, width=12
+                ).grid(row=row, column=2, sticky="w", padx=(6, 0))
+            elif key == "report":
+                ttk.Button(
+                    form_frame, text="Choisir un README…", command=self.browse_readme, width=18
+                ).grid(row=row, column=2, sticky="w", padx=(6, 0))
+            elif required:
                 ttk.Label(form_frame, text="*", foreground="#dc2626").grid(
                     row=row, column=2, sticky="w", padx=(4, 0)
                 )
@@ -270,6 +302,17 @@ class ProjectManager(tk.Tk):
         for field in ("name", "date", "description", "tags", "demo", "source"):
             self.set_field(field, project.get(field, ""))
 
+        folder = self._folder_from_project(project)
+        self.set_field("folder", folder)
+        self.set_field("code", project.get("code_file", ""))
+
+        report = project.get("report_text", "")
+        if not report and project.get("report_file"):
+            report_path = INDEX.parent / project["report_file"]
+            if report_path.exists():
+                report = report_path.read_text(encoding="utf-8", errors="replace")
+        self.set_field("report", report)
+
         size_key = next(
             key for key, item in SIZES.items() if item["value"] == project["size"]
         )
@@ -304,6 +347,133 @@ class ProjectManager(tk.Tk):
 
         self.save_button.configure(text="Enregistrer les modifications")
         self.status.set(f"Édition de « {project['name']} »")
+
+    def _folder_from_project(self, project: dict) -> str:
+        """Retrouve le dossier source_code existant d'un projet."""
+        for key in ("code_file", "report_file"):
+            parts = project.get(key, "").split("/")
+            if len(parts) >= 2 and parts[0] == "source_code":
+                return parts[1]
+        return slugify(project.get("name", ""))
+
+    def _load_report_file(self, path: Path) -> None:
+        """Charge un README dans le champ de rapport."""
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError as error:
+            messagebox.showerror("Lecture impossible", str(error))
+            return
+        self.set_field("report", text)
+        if not self.get_field("folder"):
+            self.set_field("folder", slugify(path.parent.name))
+        self.status.set(f"Rapport chargé depuis {path.name}")
+
+    def browse_code(self) -> None:
+        """Choisis le fichier de code à copier dans source_code/<projet>."""
+        path = filedialog.askopenfilename(
+            title="Choisir le fichier de code",
+            filetypes=[
+                (
+                    "Fichiers de code",
+                    "*.py *.pyw *.cpp *.cc *.cxx *.c *.h *.hpp *.hh *.js *.ts *.html *.css *.txt",
+                ),
+                ("Tous les fichiers", "*.*"),
+            ],
+        )
+        if not path:
+            return
+
+        source = Path(path)
+        self.set_field("code", path)
+        if not self.get_field("folder"):
+            self.set_field("folder", slugify(self.get_field("name") or source.stem))
+
+        readme = source.with_name("README.md")
+        if readme.exists():
+            self._load_report_file(readme)
+
+        self.status.set(f"Fichier sélectionné : {source.name}")
+
+    def browse_readme(self) -> None:
+        """Choisis un README existant et le charge comme rapport."""
+        path = filedialog.askopenfilename(
+            title="Choisir un README",
+            filetypes=[("Markdown / texte", "*.md *.txt"), ("Tous les fichiers", "*.*")],
+        )
+        if not path:
+            return
+
+        source = Path(path)
+        self._load_report_file(source)
+        if not self.get_field("code"):
+            extensions = {".py", ".cpp", ".cc", ".cxx", ".c", ".h", ".hpp", ".js", ".ts"}
+            candidates = [
+                item
+                for item in source.parent.iterdir()
+                if item.is_file()
+                and item.suffix.lower() in extensions
+                and item.name.lower() != "readme.md"
+            ]
+            if candidates:
+                self.set_field("code", str(candidates[0]))
+
+    def _unique_folder(self, folder: str) -> str:
+        """Évite qu'un dossier source soit partagé par deux projets."""
+        used = set()
+        for items in self.projects.values():
+            for project in items:
+                if project is self.current_project:
+                    continue
+                for key in ("code_file", "report_file"):
+                    parts = project.get(key, "").split("/")
+                    if len(parts) >= 2 and parts[0] == "source_code":
+                        used.add(parts[1])
+
+        if folder not in used:
+            return folder
+        for number in range(2, 100):
+            candidate = f"{folder}-{number}"
+            if candidate not in used:
+                return candidate
+        raise PortfolioError("Impossible de trouver un dossier source libre.")
+
+    def prepare_assets(self, data: dict) -> None:
+        """Copie le fichier de code et écrit le rapport dans source_code/."""
+        folder = self._unique_folder(slugify(self.get_field("folder") or data["name"]))
+        report_text = self.get_field("report")
+        target_dir = SOURCE_DIR / folder
+
+        code_field = self.get_field("code")
+        if code_field:
+            source = Path(code_field)
+            if not source.is_absolute():
+                source = INDEX.parent / source
+            if not source.is_file():
+                raise PortfolioError(f"Fichier de code introuvable : {source}")
+            if source.resolve() != (target_dir / source.name).resolve():
+                target_dir.mkdir(parents=True, exist_ok=True)
+                try:
+                    shutil.copy2(source, target_dir / source.name)
+                except OSError as error:
+                    raise PortfolioError(f"Copie du code impossible : {error}")
+            data["code_file"] = f"source_code/{folder}/{source.name}"
+        else:
+            data["code_file"] = ""
+
+        if report_text:
+            target_dir.mkdir(parents=True, exist_ok=True)
+            try:
+                (target_dir / "README.md").write_text(report_text, encoding="utf-8")
+            except OSError as error:
+                raise PortfolioError(f"Écriture du rapport impossible : {error}")
+            data["report_file"] = f"source_code/{folder}/README.md"
+            data["report_text"] = ""
+        else:
+            data["report_file"] = ""
+            data["report_text"] = ""
+
+        self.set_field("folder", folder)
+        data["folder"] = folder
 
     def _find_project(self, key: str) -> dict | None:
         try:
@@ -375,6 +545,12 @@ class ProjectManager(tk.Tk):
             "category": category_value,
             "language": language_value,
             "thumb": thumb_value,
+            "folder": self.get_field("folder"),
+            "code": self.get_field("code"),
+            "report": self.get_field("report"),
+            "code_file": self.current_project.get("code_file", "") if self.current_project else "",
+            "report_file": self.current_project.get("report_file", "") if self.current_project else "",
+            "report_text": self.get_field("report"),
         }
         if self.current_project:
             data["start"] = self.current_project["start"]
@@ -387,6 +563,7 @@ class ProjectManager(tk.Tk):
             data = self.read_form()
             if not data["name"]:
                 raise PortfolioError("Le nom du projet est obligatoire.")
+            self.prepare_assets(data)
             if self.current_project:
                 project = replace_card(data)
                 message = f"Projet « {project['name']} » mis à jour."

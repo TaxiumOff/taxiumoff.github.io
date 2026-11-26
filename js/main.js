@@ -1,6 +1,6 @@
 /* =============================================================
    PORTFOLIO – MODÈLE VIERGE
-   Petites interactions : thème, menu, révélations, filtres, formulaire.
+   Petites interactions : thème, menu, révélations, filtres, lecteur de code, formulaire.
    ============================================================= */
 
 const root = document.documentElement;
@@ -136,7 +136,107 @@ bindFilterGroup(categoryFilters, "categoryFilter", (value) => { activeCategory =
 bindFilterGroup(languageFilters, "languageFilter", (value) => { activeLanguage = value; });
 applyProjectFilters();
 
-/* ---------- 5. Formulaire de contact ----------
+/* ---------- 5. Lecteur de code en lecture seule ----------
+   Les fichiers sont chargés depuis source_code/<projet> puis coloriés
+   côté navigateur, sans bibliothèque et sans possibilité d'édition. */
+const codePatterns = {
+  python: /("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#[^\n]*|\b(?:def|class|return|if|elif|else|for|while|in|not|and|or|import|from|as|with|try|except|finally|raise|lambda|yield|pass|break|continue|global|nonlocal|del|assert|async|await|True|False|None|self)\b|\b\d+(?:\.\d+)?\b)/gm,
+  cpp: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#[^\n]*|\b(?:include|define|ifndef|ifdef|endif|int|char|float|double|void|bool|auto|const|constexpr|static|extern|return|if|else|for|while|do|switch|case|default|break|continue|class|struct|enum|public|private|protected|namespace|using|template|typename|new|delete|this|true|false|nullptr|std|string|vector)\b|\b\d+(?:\.\d+)?\b)/gm,
+  js: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:const|let|var|function|return|if|else|for|while|class|new|async|await|import|from|export|default|true|false|null|undefined)\b|\b\d+(?:\.\d+)?\b)/gm,
+  generic: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#[^\n]*|\b\d+(?:\.\d+)?\b)/gm,
+};
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function detectCodeLanguage(path) {
+  const extension = path.split(".").pop().toLowerCase();
+  if (["py", "pyw"].includes(extension)) return "python";
+  if (["cpp", "cc", "cxx", "h", "hpp", "hh", "c"].includes(extension)) return "cpp";
+  if (["js", "mjs", "cjs", "ts", "tsx", "jsx"].includes(extension)) return "js";
+  return "generic";
+}
+
+function tokenClass(token, language) {
+  if (/^("""|'''|["'`])/.test(token)) return "tok-string";
+  if (/^\/\//.test(token) || /^\/\*/.test(token)) return "tok-comment";
+  if (/^#/.test(token)) return language === "python" ? "tok-comment" : "tok-preproc";
+  if (/^\d/.test(token)) return "tok-number";
+  return "tok-keyword";
+}
+
+function highlightCode(code, language) {
+  const pattern = new RegExp(codePatterns[language].source, "gm");
+  let output = "";
+  let lastIndex = 0;
+  let match;
+
+  while ((match = pattern.exec(code)) !== null) {
+    const token = match[0];
+    output += escapeHtml(code.slice(lastIndex, match.index));
+    output += `<span class="${tokenClass(token, language)}">${escapeHtml(token)}</span>`;
+    lastIndex = match.index + token.length;
+  }
+
+  return output + escapeHtml(code.slice(lastIndex));
+}
+
+async function loadCodeBlocks() {
+  const codeBlocks = document.querySelectorAll("[data-code-src]");
+  if (!codeBlocks.length) return;
+
+  if (window.location.protocol === "file:") {
+    codeBlocks.forEach((block) => {
+      block.textContent = "Lance le site avec python -m http.server 8000 pour afficher le code.";
+    });
+    return;
+  }
+
+  for (const block of codeBlocks) {
+    const path = block.dataset.codeSrc;
+    try {
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const code = (await response.text()).replace(/\r\n?/g, "\n");
+      block.innerHTML = highlightCode(code, detectCodeLanguage(path));
+
+      const editor = block.closest(".code-editor");
+      const gutter = editor && editor.querySelector(".code-editor__gutter");
+      if (gutter) {
+        const lines = code.replace(/\n$/, "").split("\n").length;
+        gutter.textContent = Array.from({ length: lines }, (_, i) => i + 1).join("\n");
+      }
+    } catch {
+      block.textContent = `Code introuvable : ${path}`;
+    }
+  }
+}
+
+async function loadCodeReports() {
+  const reports = document.querySelectorAll("[data-report-src]");
+  if (!reports.length || window.location.protocol === "file:") return;
+
+  for (const report of reports) {
+    try {
+      const response = await fetch(report.dataset.reportSrc);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      report.textContent = await response.text();
+    } catch {
+      report.textContent = "Rapport introuvable.";
+    }
+  }
+}
+
+loadCodeBlocks();
+loadCodeReports();
+
+/* ---------- 6. Formulaire de contact ----------
    Version sans serveur : ouvre l’application e-mail avec le message pré-rempli.
    À remplacer par un service (Formspree, Resend, backend…) si tu veux un vrai envoi.
    ADRESSE À PERSONNALISER ↓ */
@@ -158,5 +258,5 @@ contactForm.addEventListener("submit", (event) => {
   formStatus.textContent = "Votre application e-mail s’ouvre avec le message pré-rempli.";
 });
 
-/* ---------- 6. Année dans le pied de page ---------- */
+/* ---------- 7. Année dans le pied de page ---------- */
 document.querySelector("#year").textContent = new Date().getFullYear();

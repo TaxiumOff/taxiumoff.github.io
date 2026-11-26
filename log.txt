@@ -14,11 +14,12 @@ Mis à jour : 2026-11-26
 - Toujours vérifier `git status` en arrivant : il peut y avoir des modifications non commitées.
 
 2. FICHIERS
-- index.html : tout le contenu visible (sections, filtres, marqueurs de projets).
-- css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations et responsive.
-- js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, formulaire mailto, année du footer.
-- project_manager.py : application graphique Tkinter qui détecte les projets existants et permet de les modifier, d'en créer ou d'en supprimer. Sélection dans une arborescence "Projets personnels" / "Projets majeurs", formulaire à droite, boutons Actualiser / Nouveau projet / Supprimer / Enregistrer / Réinitialiser.
-- portfolio_lib.py : module partagé (lecture des marqueurs, parsing des blocs <article>, génération des cartes, insertion/remplacement/suppression). Utilisé par les 3 outils Python ; aucune dépendance autre que la bibliothèque standard.
+- index.html : tout le contenu visible (sections, filtres, marqueurs de projets). Les cartes peuvent contenir un <details class="code-viewer"> avec un <pre data-code-src> et un rapport data-report-src.
+- css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations, responsive, styles du lecteur de code (.code-editor, .code-viewer, tokens .tok-*).
+- js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, lecteur de code en lecture seule (fetch source_code/, coloration Python/C++/JS via regex, numéros de ligne), formulaire mailto, année du footer.
+- project_manager.py : application graphique Tkinter qui détecte les projets existants et permet de les modifier, d'en créer ou d'en supprimer. Sélection dans une arborescence "Projets personnels" / "Projets majeurs", formulaire à droite, boutons Actualiser / Nouveau projet / Supprimer / Enregistrer / Réinitialiser / Parcourir… / Choisir un README… . Champs supplémentaires : Dossier du code, Fichier de code, Rapport / description du code.
+- portfolio_lib.py : module partagé (lecture des marqueurs, parsing des blocs <article>, génération des cartes, insertion/remplacement/suppression, chemins source_code/ sûrs). Utilisé par les 3 outils Python ; aucune dépendance autre que la bibliothèque standard.
+- source_code/ : dossier créé à la demande, un sous-dossier par projet (slug du nom), avec le fichier de code copié et README.md pour le rapport.
 - add_project.py : assistant console qui ajoute une carte dans index.html via portfolio_lib.
 - remove_project.py : assistant console qui liste et supprime une carte dans index.html via portfolio_lib.
 - README.md : instructions d'usage et personnalisation.
@@ -48,6 +49,8 @@ Mis à jour : 2026-11-26
 - Styles de vignette : thumb--one (violet, jeux vidéo), thumb--two (vert, cybersécurité), thumb--three (orange, choix libre).
 - Badges : .project-card__badge = catégorie ; .project-card__lang avec .lang-python ou .lang-cpp = langage + <svg class="lang-icon"> (icône Simple Icons Python/C++) + texte.
 - Les icônes de langage sont intégrées dans le SVG généré par add_project.py ; .lang-icon mesure 14 px et reprend la couleur du texte (fill: currentColor).
+- Attributs optionnels sur <article> : data-code-file="source_code/<dossier>/<fichier>" et data-report-file="source_code/<dossier>/README.md". Le lecteur <details class="code-viewer"> contient <code data-code-src="..."> et, si besoin, <div class="code-report__body" data-report-src="...">.
+- Le code est chargé par fetch : il faut servir le site en http (python -m http.server 8000). En file://, un message invitant à lancer le serveur remplace le code.
 - NE PAS SUPPRIMER CES MARQUEURS :
     <!-- BEGIN SMALL PROJECTS --> ... <!-- END SMALL PROJECTS -->
     <!-- BEGIN BIG PROJECTS --> ... <!-- END BIG PROJECTS -->
@@ -57,9 +60,11 @@ Mis à jour : 2026-11-26
 6. AJOUTER / MODIFIER / SUPPRIMER UN PROJET
 - Application graphique : python project_manager.py (Tkinter inclus dans Python, zéro dépendance).
   - Détection automatique de tous les blocs <article> entre les marqueurs BEGIN/END des deux grilles au lancement et via "Actualiser depuis index.html".
-  - La liste affiche Type / numéro / nom / détails (date · catégorie · langage). Sélectionner une ligne pré-remplit le formulaire avec les valeurs détectées : nom, date, description, technologies, liens, section, catégorie, langage, vignette.
-  - "Enregistrer les modifications" régénère uniquement la carte sélectionnée ; si la section change, le bloc est déplacé de l'autre grille. "Nouveau projet" crée une carte ; "Supprimer" demande confirmation avant d'effacer le bloc.
-  - Les URL sont validées http(s) ; le HTML est échappé ; les marqueurs BEGIN/END ne sont jamais touchés. Recharger le navigateur après chaque changement.
+  - La liste affiche Type / numéro / nom / détails (date · catégorie · langage). Sélectionner une ligne pré-remplit le formulaire avec les valeurs détectées : nom, date, description, technologies, liens, section, catégorie, langage, vignette, dossier du code, fichier de code et rapport (le README lié est relu automatiquement).
+  - "Parcourir…" copie le fichier choisi dans source_code/<dossier>/ avec shutil.copy2 ; le nom du dossier est un slug du nom du projet, avec suffixe -2 si le dossier est déjà utilisé par un autre projet. Si un README.md voisin existe, il est chargé dans le rapport.
+  - "Choisir un README…" lit un README.md ou .txt existant et le met dans le champ Rapport. Le rapport est toujours réécrit dans source_code/<dossier>/README.md ; le HTML garde seulement la référence data-report-file.
+  - "Enregistrer les modifications" régénère uniquement la carte sélectionnée ; si la section change, le bloc est déplacé de l'autre grille. "Nouveau projet" crée une carte ; "Supprimer" demande confirmation avant d'effacer le bloc (les fichiers source_code/ ne sont pas supprimés, pour éviter une perte de données).
+  - Les URL sont validées http(s), les chemins source_code sont refusés s'ils sont absolus ou contiennent "..", le HTML est échappé, le code est coloré côté navigateur sans bibliothèque. Les marqueurs BEGIN/END ne sont jamais touchés. Recharger le navigateur après chaque changement.
 - Ajout console : python add_project.py (depuis le dossier du dépôt).
 - Questions posées à l'ajout : type (1 = projet personnel, 2 = projet majeur), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
 - Suppression console : python remove_project.py. Il demande le type, affiche la liste des projets, accepte un numéro ou le nom exact (insensible à la casse), demande confirmation (o/n) puis retire le bloc <article>. Entrée vide = annulation, aucun fichier modifié.
@@ -109,3 +114,4 @@ Mis à jour : 2026-11-26
 - Suppressions testées sur une copie temporaire : par numéro (projet majeur), par nom exact avec « & » (projet personnel), annulation sans modification, marqueurs BEGIN/END conservés.
 - Responsive vérifié dans la logique CSS : 900 px (vitrine en une colonne), 760 px (menu mobile), 620 px (grilles en une colonne).
 - Équilibrage des accolades CSS et syntaxe JS/Python vérifiés.
+- Lecteur de code testé dans le navigateur intégré sur une copie temporaire servie en http : fichier source chargé, rapport chargé, tokens .tok-keyword/.tok-comment/.tok-string générés, numéros de ligne affichés, aucune erreur console. Le test a utilisé un fichier géré par l'UI, aucun projet réel n'a été inventé dans le dépôt.
