@@ -2,3 +2,12 @@ __pycache__/
 *.py[cod]
 .DS_Store
 Thumbs.db
+
+# Secrets, données et outils de gestion locale : jamais versionnés
+.admin/
+mdp.txt
+*.local
+/admin/
+/admin_server.py
+/portfolio.py
+/data/

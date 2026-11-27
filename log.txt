@@ -1,117 +1,35 @@
-LOG DE CONTEXTE — Portfolio Ilian Maanan
-Mis à jour : 2026-11-26
+CONTEXTE — Portfolio Ilian Maanan
+Mis à jour : 2026-11-27
 
-1. OÙ ON EST
-- Dépôt : C:\Users\ilian\Documents\Dev\Mon portfolio\taxiumoff.github.io
-- Remote : https://github.com/TaxiumOff/taxiumoff.github.io.git (branche main)
-- Historique récent :
-  - 2f3cc52 Remove et Add Projet
-  - 379eecb Ajout du lien X et des logos GitHub/X
-  - f27bdf4 Ajout du log de contexte pour les futures sessions
-  - b48d4c1 Ajout des petits et gros projets + assistant Python
-- L'utilisateur demande à l'agent de committer ; c'est lui qui fait `git push`.
-- Stack : HTML/CSS/JS natifs, zéro dépendance, zéro build. Python sert uniquement aux outils de gestion des projets.
-- Toujours vérifier `git status` en arrivant : il peut y avoir des modifications non commitées.
+DIRECTION VISUELLE
+- Entre deux : esprit éditeur de code de l’ancienne version + structure éditoriale actuelle.
+- Pro mais stylé : fond encre, papier clair, titre serif, accents ambre, bordures 1 px, ombres sobres.
+- Aucun dégradé, orbe, glassmorphism, pastille animée ni badge générique.
+- Fenêtre de code dans le hero : chrome d’éditeur, points de couleur, coloration, barre d’état. Pas de post-it, pas de numéros de ligne.
 
-2. FICHIERS
-- index.html : tout le contenu visible (sections, filtres, marqueurs de projets). Les cartes peuvent contenir un <details class="code-viewer"> avec un <pre data-code-src> et un rapport data-report-src.
-- css/style.css : variables de couleurs en haut (--accent, --accent-2, --bg...), thème clair via [data-theme="light"], animations, responsive, styles du lecteur de code (.code-editor, .code-viewer, tokens .tok-*).
-- js/main.js : thème mémorisé (localStorage), menu mobile, révélations au défilement, filtres synchronisés, lecteur de code en lecture seule (fetch source_code/, coloration Python/C++/JS via regex, numéros de ligne), formulaire mailto, année du footer.
-- project_manager.py : application graphique Tkinter qui détecte les projets existants et permet de les modifier, d'en créer ou d'en supprimer. Sélection dans une arborescence "Projets personnels" / "Projets majeurs", formulaire à droite, boutons Actualiser / Nouveau projet / Supprimer / Enregistrer / Réinitialiser / Parcourir… / Choisir un README… . Champs supplémentaires : Dossier du code, Fichier de code, Rapport / description du code.
-- portfolio_lib.py : module partagé (lecture des marqueurs, parsing des blocs <article>, génération des cartes, insertion/remplacement/suppression, chemins source_code/ sûrs). Utilisé par les 3 outils Python ; aucune dépendance autre que la bibliothèque standard.
-- source_code/ : dossier créé à la demande, un sous-dossier par projet (slug du nom), avec le fichier de code copié et README.md pour le rapport.
-- add_project.py : assistant console qui ajoute une carte dans index.html via portfolio_lib.
-- remove_project.py : assistant console qui liste et supprime une carte dans index.html via portfolio_lib.
-- README.md : instructions d'usage et personnalisation.
-- .gitignore : __pycache__/, *.py[cod], .DS_Store, Thumbs.db.
-
-3. STRUCTURE DES SECTIONS (ordre de haut en bas)
-- #accueil : hero avec "Ilian Maanan", vignette de code décorative, badge "Portfolio en évolution".
-- #apropos : intitulé "Profil", bio + compétences, eyebrow 01. Statistiques remplacées par des repères pro (1re, 2 domaines, Python).
-- #projets-majeurs : onglet "Projets majeurs", eyebrow 02, grille #projects-major-grid. Présentation en vitrine : grand visuel, titre dessus, numérotation automatique 01/02..., contenu à côté. Pas de filtre.
-- #projets-personnels : onglet "Projets personnels", eyebrow 03, en bas de page, grille #projects-personal-grid, vignettes compactes de 110 px avec filtres.
-- #contact : eyebrow 04, vocabulaire vouvoié ("Échangeons sur votre projet", "Votre nom", etc.).
-- Navigation : Accueil, À propos, Projets majeurs, Projets personnels, Contact.
-- Le bouton du hero "Découvrir mes projets" pointe sur #projets-majeurs.
-
-4. CATÉGORIES ET FILTRES
-- Catégories : jeux-video ("Jeux vidéo") et cybersecurite ("Cybersécurité").
-- Langages : python ("Python") et cpp ("C++").
-- Les filtres n'existent QUE dans #projets-personnels (projets personnels) : deux lignes, Catégorie puis Langage, avec "Tous" aux deux niveaux.
-- Boutons : data-category-filter / data-language-filter, état aria-pressed.
-- Les projets majeurs ne sont pas filtrés : ils restent tous visibles.
-- Règle d'affichage : une carte personnelle est visible seulement si la catégorie ET le langage correspondent, ou si le filtre est "all".
-- Messages d'attente automatiques : #projects-empty et #projects-big-empty.
-
-5. CONVENTIONS DES CARTES
-- Carte personnelle : <article class="project-card project-card--small reveal" data-category="..." data-language="..."> avec .project-card__thumb, .project-card__body, .project-card__footer.
-- Projet majeur : <article class="project-showcase reveal" data-category="..." data-language="..."> avec .project-showcase__visual (thumb + badges + .project-showcase__index + .project-showcase__title) et .project-showcase__content.
-- Styles de vignette : thumb--one (violet, jeux vidéo), thumb--two (vert, cybersécurité), thumb--three (orange, choix libre).
-- Badges : .project-card__badge = catégorie ; .project-card__lang avec .lang-python ou .lang-cpp = langage + <svg class="lang-icon"> (icône Simple Icons Python/C++) + texte.
-- Les icônes de langage sont intégrées dans le SVG généré par add_project.py ; .lang-icon mesure 14 px et reprend la couleur du texte (fill: currentColor).
-- Attributs optionnels sur <article> : data-code-file="source_code/<dossier>/<fichier>" et data-report-file="source_code/<dossier>/README.md". Le lecteur <details class="code-viewer"> contient <code data-code-src="..."> et, si besoin, <div class="code-report__body" data-report-src="...">.
-- Le code est chargé par fetch : il faut servir le site en http (python -m http.server 8000). En file://, un message invitant à lancer le serveur remplace le code.
-- NE PAS SUPPRIMER CES MARQUEURS :
-    <!-- BEGIN SMALL PROJECTS --> ... <!-- END SMALL PROJECTS -->
+CONVENTIONS
+- Sections : projets majeurs (vitrine, non filtrés) puis projets personnels (filtres Catégorie + Langage).
+- Catégories : jeux-video / cybersecurite. Langages : python / cpp.
+- Contact au vouvoiement. Aucun projet inventé.
+- Ne pas supprimer :
     <!-- BEGIN BIG PROJECTS --> ... <!-- END BIG PROJECTS -->
-- Les cartes sont insérées juste avant le marqueur END correspondant.
-- remove_project.py repère les blocs <article> entre BEGIN et END par comptage des balises ; il ne touche jamais aux marqueurs ni aux commentaires.
+    <!-- BEGIN SMALL PROJECTS --> ... <!-- END SMALL PROJECTS -->
 
-6. AJOUTER / MODIFIER / SUPPRIMER UN PROJET
-- Application graphique : python project_manager.py (Tkinter inclus dans Python, zéro dépendance).
-  - Détection automatique de tous les blocs <article> entre les marqueurs BEGIN/END des deux grilles au lancement et via "Actualiser depuis index.html".
-  - La liste affiche Type / numéro / nom / détails (date · catégorie · langage). Sélectionner une ligne pré-remplit le formulaire avec les valeurs détectées : nom, date, description, technologies, liens, section, catégorie, langage, vignette, dossier du code, fichier de code et rapport (le README lié est relu automatiquement).
-  - "Parcourir…" copie le fichier choisi dans source_code/<dossier>/ avec shutil.copy2 ; le nom du dossier est un slug du nom du projet, avec suffixe -2 si le dossier est déjà utilisé par un autre projet. Si un README.md voisin existe, il est chargé dans le rapport.
-  - "Choisir un README…" lit un README.md ou .txt existant et le met dans le champ Rapport. Le rapport est toujours réécrit dans source_code/<dossier>/README.md ; le HTML garde seulement la référence data-report-file.
-  - "Enregistrer les modifications" régénère uniquement la carte sélectionnée ; si la section change, le bloc est déplacé de l'autre grille. "Nouveau projet" crée une carte ; "Supprimer" demande confirmation avant d'effacer le bloc (les fichiers source_code/ ne sont pas supprimés, pour éviter une perte de données).
-  - Les URL sont validées http(s), les chemins source_code sont refusés s'ils sont absolus ou contiennent "..", le HTML est échappé, le code est coloré côté navigateur sans bibliothèque. Les marqueurs BEGIN/END ne sont jamais touchés. Recharger le navigateur après chaque changement.
-- Ajout console : python add_project.py (depuis le dossier du dépôt).
-- Questions posées à l'ajout : type (1 = projet personnel, 2 = projet majeur), nom, date de création, catégorie (1/2), langage (1/2), description courte, technologies séparées par des virgules, lien de démonstration, lien du code source, style de vignette (1/2/3).
-- Suppression console : python remove_project.py. Il demande le type, affiche la liste des projets, accepte un numéro ou le nom exact (insensible à la casse), demande confirmation (o/n) puis retire le bloc <article>. Entrée vide = annulation, aucun fichier modifié.
-- Les trois outils partagent portfolio_lib.py : une seule logique de parsing, de génération et d'écriture.
-- Tests effectués sur des copies temporaires dans %TEMP%\opencode-portfolio-test (index.html d'origine jamais modifié par les tests) : ajout personnel/moteur, parsing des champs avec "&" et balises HTML, modification avec changement de section personnel -> majeur, suppression, conservations des marqueurs, détection et pré-remplissage de l'UI Tkinter.
+LIENS ET CODE
+- Un dépôt GitHub public donne trois liens : le dépôt, une archive ZIP et l’exécutable (fichier du dépôt).
+- Aucun fichier source n’est hébergé sur le site.
+- Le panneau local liste les fichiers texte du dépôt via l’API GitHub ; le fichier choisi est affiché sur la fiche sous forme d’aperçu en lecture seule.
+- Les blocs de code des fiches sont stylés en lecteur de code, sans numéros de ligne.
 
-7. IDENTITÉ ET TEXTES DÉJÀ PERSONNALISÉS
-- Ilian Maanan, initiales IM, titre "Ilian Maanan — Développement de jeux vidéo & cybersécurité".
-- Hero : "Ilian Maanan" / "Étudiant · jeux vidéo & cybersécurité" / "Développeur de jeux vidéo en formation, passionné de cybersécurité et de Python." CTA "Découvrir mes projets".
-- À propos : intitulé "Profil", classe de première générale, Python, algorithmique, développement de jeux vidéo, cybersécurité.
-- Vignette de code du hero :
-    let mood = "motivé"; // constant
-    let objectif = "progresser"; // chaque jour
-- Contact vouvoié : "Échangeons sur votre projet", "Votre nom", "Votre e-mail", "Composer le message".
-- Les messages d'attente ne parlent plus de add_project.py : ils sont écrits pour un visiteur du site.
-- Métadonnées ajoutées : theme-color, og:type, og:title, og:description.
-- GitHub : https://github.com/TaxiumOff (présent dans le hero et le contact).
-- X : https://x.com/taxiumoff (présent dans le hero et le contact).
-- Les liens GitHub et X utilisent leurs vrais logos SVG inline, pas du texte (tailles 20 px dans le hero, 24 px dans le contact, via .socials a svg).
+EMAIL
+- ilianmaanan.pro@gmail.com renseigné dans index.html et contactEmail dans js/site.js.
 
-8. RESTE À FAIRE / POINTS D'ATTENTION
-- Une carte de test « Test » (003 · Jeux vidéo · Python) est présente dans #projects-personal-grid : elle a été ajoutée par l'utilisateur, ne pas la supprimer sans demande.
-- #projects-major-grid est vide et affiche son message d'attente.
-- Remplacer ton.email@example.com dans index.html (lien mailto) ET dans js/main.js (contactEmail).
-- Remplacer le href="#" restant (LinkedIn uniquement).
-- Ne pas inventer de projets : l'utilisateur n'en a pas encore.
-- Vocabulaire professionnel à conserver : "Projets majeurs", "Projets personnels", vouvoiement dans le contact, aucune référence à l'outil d'ajout dans la partie visible.
-- L'utilisateur aime qu'on pose des questions avant les changements de structure ; il choisit souvent les options "(recommandé)".
-- Toujours répondre en français.
-- Avant toute modification, regarder `git status` et `git diff` : l'utilisateur peut avoir édité les fichiers entre deux sessions.
+ENCADRÉS
+- Bloc « À propos de moi » (texte par défaut lorem ipsum) dans la carte « Mon profil ».
+- Six couleurs de vignette : violet, vert, orange, bleu, rose, cyan.
+- Les cartes et zones de texte s’ajustent à la taille du contenu.
 
-9. COMMANDES UTILES
-- Lancer le site : python -m http.server 8000
-- Gérer les projets (UI) : python project_manager.py
-- Ajouter un projet : python add_project.py
-- Supprimer un projet : python remove_project.py
-- Vérifier le JS : node --check js/main.js
-- Vérifier la syntaxe Python : python -m py_compile portfolio_lib.py add_project.py remove_project.py project_manager.py
-- Voir l'état : git status --short
-- Commiter : git add -A puis git commit -m "..."
-- Le push est fait par l'utilisateur, pas par l'agent.
-
-10. VÉRIFICATIONS DÉJÀ FAITES
-- Aucune erreur console au chargement de index.html dans le navigateur intégré.
-- Filtres testés uniquement sur les projets personnels (par exemple jeux-video + cpp masque la carte) ; les projets majeurs restent visibles.
-- Insertions personnel/majeur testées sur une copie temporaire : vitrine .project-showcase, carte compacte, icônes Python/C++, échappement HTML correct.
-- Suppressions testées sur une copie temporaire : par numéro (projet majeur), par nom exact avec « & » (projet personnel), annulation sans modification, marqueurs BEGIN/END conservés.
-- Responsive vérifié dans la logique CSS : 900 px (vitrine en une colonne), 760 px (menu mobile), 620 px (grilles en une colonne).
-- Équilibrage des accolades CSS et syntaxe JS/Python vérifiés.
-- Lecteur de code testé dans le navigateur intégré sur une copie temporaire servie en http : fichier source chargé, rapport chargé, tokens .tok-keyword/.tok-comment/.tok-string générés, numéros de ligne affichés, aucune erreur console. Le test a utilisé un fichier géré par l'UI, aucun projet réel n'a été inventé dans le dépôt.
+VÉRIFICATIONS
+- node --check js/site.js
+- git diff --check
+- git status --short
